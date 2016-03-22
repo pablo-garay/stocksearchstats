@@ -4,7 +4,7 @@
 <head>
 <style>
 	body {
-		text-align: center;
+		text-align: left;
 		margin: 0;
 	}
 	div.centered 
@@ -83,6 +83,7 @@
 	input[type=text]{
 		border: solid #CCCBCB;
 		border-width: 1px;
+        text-align: left;
 	}
 
 
@@ -166,7 +167,9 @@
 	}
 
 </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript">
         function clearSearch(){
             document.getElementById("input").value="";
@@ -367,8 +370,48 @@
     // A $( document ).ready() block.
     $( document ).ready(function() {
         console.log( "ready!" );
-        console.log( "Hello Pablo!" );
+        
+        function log( message ) {
+          $( "<div>" ).text( message ).prependTo( "#log" );
+          $( "#log" ).scrollTop( 0 );
+        }
+
+        $( "#input" ).autocomplete({
+          source: function( request, response ) {
+            $.ajax({
+              url: "http://dev.markitondemand.com/MODApis/Api/v2/lookup/jsonp",
+              dataType: "jsonp",
+              type: 'GET',
+              data: {
+                input: request.term
+              },
+              success: function( data ) {
+                var results = {};
+                for (var key in data) {
+                    results[key] = {};
+                    results[key]["label"] = data[key]["Symbol"] + " - " + data[key]["Name"] + " ( " + data[key]["Exchange"] + " )";
+                    results[key]["value"] = data[key]["Symbol"];
+
+                }
+                response( results );
+              }
+            });
+          },
+          minLength: 1,
+          /*select: function( event, ui ) {
+            log( ui.item ?
+              "Selected: " + ui.item.value:
+              "Nothing selected, input was " + this.value);
+          },*/
+          open: function() {
+            $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+          },
+          close: function() {
+            $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+          }
+        });
     });
+    
 </script>
 <noscript>
 </body>
