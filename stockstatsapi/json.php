@@ -13,7 +13,7 @@
     if (isset($_GET["symbol"])){
         /* JSON */
         $json = @file_get_contents("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=" . rawurlencode(htmlspecialchars($_GET["symbol"])));
-        /*echo json;*/
+        /*echo $json;*/
 
         if ($json === FALSE){ /* conditional for error handling */
             return generate_error_response("Error while trying to access resource to generate response");
@@ -64,8 +64,7 @@
                 ];
                 
                 $json_response = json_encode($php_response);
-                /*echo ($json_response);*/
-                return $json_response;
+                echo ($json_response);
 
             } else {
                 return generate_error_response("There is no stock information available");
@@ -79,8 +78,7 @@
         if ($json === FALSE){ /* conditional for error handling */
             return generate_error_response("Error while trying to access resource to generate response");
         } else {
-            /*echo $json;*/
-            return $json;
+            echo $json;
             /*if ($xmlElement->count() == 0) {
             //it's empty
             echo '<div class="info-message">Select a valid entry</div>';
