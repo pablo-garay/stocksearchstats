@@ -7,10 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap Carousel Example - Bootstrap 101 Template</title>
+    <title>Stock Market Statistics Search and Information Retrieval</title>
     
     <style>
         body {
+            background: url('img/backg.jpg') no-repeat center center fixed; 
+            background-color: transparent;
+            background-size: cover;
             text-align: left;
             margin: 0;
         }
@@ -36,7 +39,7 @@
             padding-top: 5px;
             padding-bottom: 2em;
             width: 700px;
-            height: 125px;
+            height: 200px;
             margin: 0 auto;
             display: block;
             margin-top: 10px; margin-bottom: 10px;
@@ -80,13 +83,6 @@
             display: inline;
         }
 
-        input[type=submit], input[type=button] {
-            background-color: white;
-            border-radius:5px;
-            border: solid #CCCBCB;
-            border-width: 1px;
-        }
-
         input[type=text]{
             border: solid #CCCBCB;
             border-width: 1px;
@@ -96,7 +92,7 @@
 
         table, th, td {
             border-collapse: collapse;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Arial, Helvetica, Verdana, sans-serif;
         }
         th, td {
             text-align: left;
@@ -105,10 +101,6 @@
         th {
             font-weight: bold;
             text-align: left;
-            background-color: #F5F5F5;
-        }
-        td {
-            background-color: #FBFAF9;
         }
         td.td2 {
             text-align: center;
@@ -120,36 +112,6 @@
 
         .table2 {
             height: 432px;
-        }
-
-        /* table inner borders */
-        td + td,
-        th + th,
-        th + td { border-left: 1px solid #CCCBCB; }
-        tr + tr { border-top: 1px solid #CCCBCB; }
-
-        /* table outer borders */
-        /* up */
-        table tr:first-child{
-          border-top: solid 2px;
-          border-color: #CCCBCB;
-        }
-        /* down */
-        table tr:last-child{
-          border-bottom: solid 2px;
-          border-color: #CCCBCB;
-        }
-        /* left */
-        table td:first-child,
-        table th:first-child {
-          border-left: solid 2px;
-          border-color: #CCCBCB;
-        }
-        /* right */
-        table td:last-child,
-        table th:last-child {
-          border-right: solid 2px;
-          border-color: #CCCBCB;
         }
 
         .markit-on-demand-logo {
@@ -171,6 +133,22 @@
             width: 700px;
             font-family: Arial, Helvetica, sans-serif;
             text-align: center;
+        }
+        
+        .bold-font {
+            font-weight: bold;
+        }
+        
+        .red-letter {
+            color: #E9072D;
+        }
+        
+        .btn {
+            font-family: Lucida Sans Unicode;
+        }
+        
+        .well {
+            background: rgb(22, 105, 173);
         }
 
     </style>
@@ -208,17 +186,23 @@
 				<div class="form-input">
 					<div id="content">				
                         <div class="box">
-						<label for="input">Enter the stock name or symbol*: </label>						
-							<input type="text" id="input" name="input" placeholder="e.g. Apple Inc or AAPL"
-								required pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]*$" 
-								value='<?php if (isset($_GET["input"])) echo htmlspecialchars($_GET["input"]); ?>' > </input>
-                                <div class="box">
-                                    <input type="submit" value="Get Quote" autofocus></input>								
-                                    <input type="button" value="Clear" onclick="clearSearch();"></input>
-                                        <div class="form-block">
-                                            Powered By: <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo">
-                                        </div>
-                                </div>
+                            <!--<div class="col-lg-6">-->
+                            <label for="input">Enter the stock name or symbol:<span class="red-letter">*</span> </label>						
+                                <input type="text" class="form-control" id="input" name="input" placeholder="e.g. Apple Inc or AAPL"
+                                    required pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]*$" 
+                                    value='<?php if (isset($_GET["input"])) echo htmlspecialchars($_GET["input"]); ?>' > </input>
+                                    <div class="box">
+                                        <button type="submit" class="btn btn-primary" autofocus>
+                                            <span class="glyphicon glyphicon-search"></span> Get Quote
+                                        </button>								
+                                        <button type="button" class="btn btn-default" onclick="clearSearch();">
+                                            <span class="glyphicon glyphicon-refresh"></span> Clear
+                                        </button>
+                                            <div class="form-block">
+                                                <div class="bold-font">Powered By: <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo"></div>
+                                            </div>
+                                    </div>
+                            <!--</div>-->
 						</div>
 					</div>				
 				</div>
@@ -267,6 +251,21 @@
         </div><!-- /.carousel -->
 
         <div id="resultsArea">
+            <!--<button type="button" class="btn btn-default" aria-label="Left Align">
+              <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+            </button>-->
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+              <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+              <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            </button>            
 			<?php
 				if (isset($_GET["symbol"])){
 					/* JSON */
@@ -284,7 +283,7 @@
 
 						} else if ($jsonResultArray["Status"] === "SUCCESS"){
 
-							echo '<table class="table2">';
+							echo '<table class="table table-striped table2">';
 
 							echo '<tr><th>Name</th><td class="td2">';
 							echo $jsonResultArray["Name"];
@@ -403,7 +402,7 @@
 					else {
 					    //XML object has children
 					    // echo "no empty"; echo "<br />";
-					    echo '<table class="table1">';
+					    echo '<table class="table table-striped table1">';
 					    echo '<tr><th>Name</th><th>Symbol</th><th>Exchange</th><th>Details</th></tr>';
 
 					    foreach ($xmlElement->LookupResult as $result) {
@@ -426,6 +425,8 @@
 				}
 			?>
 		</div>
+    
+        <div class="well">Normal Well</div>
 	</div>    
 
     <!-- ============= JS scripts ============= -->
@@ -460,8 +461,8 @@
         $( "#input" ).autocomplete({
           source: function( request, response ) {
             $.ajax({
-              url: "http://dev.markitondemand.com/MODApis/Api/v2/lookup/jsonp",
-              dataType: "jsonp",
+              url: "http://localhost/stocksearchstats/stockstatsapi/json.php",
+              dataType: "json",
               type: 'GET',
               data: {
                 input: request.term
