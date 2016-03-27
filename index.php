@@ -46,10 +46,10 @@
         }
 
         hr {
-            background:#CDCCCD; 
+            background: white; 
             border:0; 
             height:1px;
-            width:97%;
+            width:100%;
             margin: 0 auto; padding: 0;
         }
 
@@ -116,7 +116,7 @@
 
         .markit-on-demand-logo {
             height: 20px;
-            width: 100px;
+            width: 140px;
         }
 
         .marker-icon {
@@ -146,11 +146,6 @@
         .btn {
             font-family: Lucida Sans Unicode;
         }
-        
-        .well {
-            background: rgb(22, 105, 173);
-        }
-
     </style>
     
     <!-- Bootstrap -->
@@ -167,6 +162,15 @@
     <!-- Custom styles for this template -->
     <link href="carousel.css" rel="stylesheet">
     
+    <style>
+        .well {
+            background: white;
+        }
+        .carousel div.item{
+          background-color: white;
+        }  
+    </style>
+    
     <!-- Clear button's logic -->
     <script type="text/javascript">
         function clearSearch(){
@@ -178,11 +182,10 @@
 
 <body>
     <div class="centered">
-    	<div class="form-container">
+    	<div class="well well-lg">
 			<h1 class="form-title">Stock Market Search</h1>
-			<hr>
 
-			<form id= "inputForm" method="GET" action="">
+			<form class="form-inline" id= "inputForm" method="GET" action="">
 				<div class="form-input">
 					<div id="content">				
                         <div class="box">
@@ -208,49 +211,10 @@
 				</div>
 			</form>
         </div>
+    
+        <hr>
 
-        <!-- Carousel
-        ================================================== -->
-        <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-          <!-- Indicators (indicates with circle image below which slide is currently shown) -->
-          <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-          </ol>
-          <div class="carousel-inner" role="listbox">
-            <div class="item active">
-              <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
-              <div class="container">
-                <div class="carousel-caption">
-                  <h1>Favorite List</h1>
-                  <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
-                  <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
-              <div class="container">
-                <div class="carousel-caption">
-                  <h1>Stock Details</h1>
-                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                  <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Left and right buttons -->
-          <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
-        </div><!-- /.carousel -->
-
-        <div id="resultsArea">
+        <div class="well well-lg">
             <!--<button type="button" class="btn btn-default" aria-label="Left Align">
               <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
             </button>-->
@@ -258,175 +222,157 @@
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             </button>
             <button type="button" class="btn btn-default" aria-label="Left Align">
-              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-default" aria-label="Left Align">
               <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
             </button>
             <button type="button" class="btn btn-default" aria-label="Left Align">
               <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            </button>            
-			<?php
-				if (isset($_GET["symbol"])){
-					/* JSON */
-					$json = @file_get_contents("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=" . rawurlencode(htmlspecialchars($_GET["symbol"])));
+            </button>
+            
+            <!-- Carousel
+            ================================================== -->
+            <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">             
+              <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    Favorite List
+                    <!-- left button -->
+                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                    </button>                    
+                    <a class="btn btn-default" href="#myCarousel" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>                                        
+                    
+                    <table class="table table-striped">
+                        <th>Symbol</th>
+                        <th>Company Name</th>
+                        <th>Stock Price</th>
+                        <th>Change (Change Percent)</th>
+                        <th>Market Cap</th>
+                    </table>
+                </div>
+                <div class="item">                  
+                    Stock Details
+                    <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <div class="page-header">
+                        <ul id="myTab1" class="nav nav-pills">
+                            <li class="active"><a href="#currentstocks" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-dashboard"></span> Current Stock</a>                                
+                            </li>
+                            <li><a href="#historicalcharts" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-stats"></span> Historical Charts</a>
+                            </li>
+                            <li><a href="#newsfeed" data-toggle="tab">
+                                    <span class="glyphicon glyphicon-link"></span> News Feeds</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="myTabContent1" class="tab-content">
+                        <div class="tab-pane fade in active" id="currentstocks">
+                            <table class="table table-striped table2">
+                                <tr><th>Name</th><td class="td2">
+                                </td></tr>
 
-					if ($json === FALSE){
-						echo '<div class="info-message">Error while trying to get JSON file resource</div>';
-					} else {
-						$jsonResultArray = json_decode($json, true);
+                                <tr><th>Symbol</th><td class="td2">
+                                </td></tr>
 
-						// /* for debugging purposes */
-						// print_r($jsonResultArray);
-						if (isset($jsonResultArray["Message"])){
-							echo '<div class="info-message">No symbol matches found for symbol input.  Try another symbol such as MSFT or AAPL.</div>';
+                                <tr><th>Last Price</th><td class="td2">
+                                </td></tr>
 
-						} else if ($jsonResultArray["Status"] === "SUCCESS"){
+                                <tr><th>Change (Change Percent)</th><td class="td2">
+                                </td></tr>
 
-							echo '<table class="table table-striped table2">';
+                                <tr><th>Time and Date</th><td class="td2">
+                                </td></tr>
 
-							echo '<tr><th>Name</th><td class="td2">';
-							echo $jsonResultArray["Name"];
-							echo '</td></tr>';
+                                <tr><th>Market Cap</th><td class="td2">    
+                                </td></tr>
 
-							echo '<tr><th>Symbol</th><td class="td2">';
-							echo $jsonResultArray["Symbol"];
-							echo '</td></tr>';
+                                <tr><th>Volume</th><td class="td2">
+                                </td></tr>
 
-							echo '<tr><th>Last Price</th><td class="td2">';
-							echo $jsonResultArray["LastPrice"];
-							echo '</td></tr>';
+                                <tr><th>Change YTD (Change Percent YTD)</th><td class="td2">
+                                </td></tr>
 
-							echo '<tr><th>Change</th><td class="td2">';
-							echo round($jsonResultArray["Change"], 2);
-							if ($jsonResultArray["Change"] > 0) 		echo '<img src="img/up.png" class="marker-icon" alt="marker">';
-							else if ($jsonResultArray["Change"] < 0) 	echo '<img src="img/down.png" class="marker-icon" alt="marker">';
-							echo '</td></tr>';
+                                <tr><th>High Price</th><td class="td2">
+                                </td></tr>
 
-							echo '<tr><th>Change Percent</th><td class="td2">';
-							echo strval(round($jsonResultArray["ChangePercent"], 2)) . "%";
-							if ($jsonResultArray["ChangePercent"] > 0) 		echo '<img src="img/up.png" class="marker-icon" alt="marker">';
-							else if ($jsonResultArray["ChangePercent"] < 0) echo '<img src="img/down.png" class="marker-icon" alt="marker">';				
-							echo '</td></tr>';
+                                <tr><th>Low Price</th><td class="td2">
+                                </td></tr>
 
-							/* Here comes the Timestamp. It requires a few manipulations to output in the correct format */
-							echo '<tr><th>Timestamp</th><td class="td2">';
-							// echo $jsonResultArray["Timestamp"];
-							$matches = array();
-							preg_match('/^[A-Za-z]{3} ([A-Za-z]{3}) (\d+) (\d{2}:\d{2}):\d{2} UTC(\S*) (\d{4})$/', $jsonResultArray["Timestamp"], $matches);
-							// echo ("<br />Timestamp " . $matches[4] . "-" . $matches[1]  . "-" . $matches[2] . " " . $matches[3]);
-							// /* e.g. 2016-Feb-26 15:59 */
-							// $timestamp_array = date_parse_from_format('Y-M-d H:i', $matches[4] . "-" . $matches[1]  . "-" . $matches[2] . " " . $matches[3]);
-							// echo "<br />AAAAAAAAA";
-							// print_r($timestamp_array);
-							date_default_timezone_set('America/Los_Angeles');
-							$date = DateTime::createFromFormat('Y-M-d H:i P', 
-											  $matches[5] . "-" . $matches[1]  . "-" . $matches[2] . " " . $matches[3] . " " . $matches[4]);
-							// print_r($date);
-							$tz = new DateTimeZone('America/Los_Angeles');
-							echo $date->setTimezone($tz)->format('Y-m-d h:i A');				
-							echo '</td></tr>';
-							// print_r(($jsonResultArray["Timestamp"]));
+                                <tr><th>Opening Price</th><td class="td2">
+                                </td></tr>
+                            </table>
+                            
+                            <img src="http://chart.finance.yahoo.com/t?s=TSLA&lang=en-US&width=400&height=300" alt="Yahoo Chart Finance graphic">
+                        </div>
+                        <div class="tab-pane fade" id="historicalcharts">
+                            <p>Content 2</p>
+                        </div>
+                        <div class="tab-pane fade" id="newsfeed">
+                            <p>Content 3</p>
+                        </div>
+                    </div>                
+                </div>
+              </div>
+              
+            </div>
+            <!-- /.carousel -->
 
-							echo '<tr><th>Market Cap</th><td class="td2">';
-							if ($jsonResultArray["MarketCap"] >= 1000000000){
-								echo strval(round($jsonResultArray["MarketCap"] / 1000000000, 2)) . " B";
-							} else if ($jsonResultArray["MarketCap"] >= 1000000){
-								echo strval(round($jsonResultArray["MarketCap"] / 1000000, 2)) . " M";
-							} else {
-								echo strval(round($jsonResultArray["MarketCap"], 2));
-							}
-							echo '</td></tr>';
+            <div id="resultsArea">          
+                <?php
+                    if (isset($_GET["symbol"])){
 
-							echo '<tr><th>Volume</th><td class="td2">';
-							echo number_format(($jsonResultArray["Volume"]), $decimals = 0 , $dec_point = "." , $thousands_sep = ",");
-							echo '</td></tr>';
+                    } else if(isset($_GET["input"])){
+                        // print_r($_POST);
 
-							echo '<tr><th>Change YTD</th><td class="td2">';
-							$changeYTD = $jsonResultArray["LastPrice"] - $jsonResultArray["ChangeYTD"];
-							if ($changeYTD < 0){ 
-								echo "(" . strval(round($changeYTD, 2)) . ")";				
-								echo '<img src="img/down.png" class="marker-icon" alt="marker">';						
-							}
-							else {
-								echo strval(round($jsonResultArray["ChangeYTD"], 2));
-								if ($changeYTD > 0) echo '<img src="img/up.png" class="marker-icon" alt="marker">';
-							}
-							echo '</td></tr>';
+                        /* Output debugging data */
+                        // $xml = file_get_contents("http://dev.markitondemand.com/MODApis/Api/v2/Lookup/xml?input=APPL");
+                        // echo "<br />";
+                        // print_r($xml);
 
-							echo '<tr><th>Change Percent YTD</th><td class="td2">';
-							echo strval(round($jsonResultArray["ChangePercentYTD"], 2)) . "%";
-							if ($jsonResultArray["ChangePercentYTD"] > 0) 		echo '<img src="img/up.png" class="marker-icon" alt="marker">';
-							else if ($jsonResultArray["ChangePercentYTD"] < 0) 	echo '<img src="img/down.png" class="marker-icon" alt="marker">';					
-							echo '</td></tr>';
+                        /* XML */
+                        $xmlElement = @simplexml_load_file('http://dev.markitondemand.com/MODApis/Api/v2/Lookup/xml?input=' . rawurlencode(htmlspecialchars($_GET["input"])));	 
 
-							echo '<tr><th>High</th><td class="td2">';
-							echo $jsonResultArray["High"];
-							echo '</td></tr>';
+                        if ($xmlElement === false){ /* conditional for error handling */
+                            echo '<div class="info-message">Error while trying to load XML file resource</div>';
+                        } else {
+                            if ($xmlElement->count() == 0) {
+                            //it's empty
+                            echo '<div class="info-message">Select a valid entry</div>';
 
-							echo '<tr><th>Low</th><td class="td2">';
-							echo $jsonResultArray["Low"];
-							echo '</td></tr>';
+                            // print_r($xmlElement);
+                        }
+                        else {
+                            //XML object has children
+                            // echo "no empty"; echo "<br />";
+                            echo '<table class="table table-striped table1">';
+                            echo '<tr><th>Name</th><th>Symbol</th><th>Exchange</th><th>Details</th></tr>';
 
-							echo '<tr><th>Open</th><td class="td2">';
-							echo $jsonResultArray["Open"];
-							echo '</td></tr>';
-
-							echo '</table>';				
-
-						} else {
-							echo '<div class="info-message">There is no stock information available.</div>';
-						}						
-					}
-
-				} else if(isset($_GET["input"])){
-					// print_r($_POST);
-
-					/* Output debugging data */
-					// $xml = file_get_contents("http://dev.markitondemand.com/MODApis/Api/v2/Lookup/xml?input=APPL");
-					// echo "<br />";
-					// print_r($xml);
-
-					/* XML */
-					$xmlElement = @simplexml_load_file('http://dev.markitondemand.com/MODApis/Api/v2/Lookup/xml?input=' . rawurlencode(htmlspecialchars($_GET["input"])));	 
-				    
-				    if ($xmlElement === false){ /* conditional for error handling */
-				    	echo '<div class="info-message">Error while trying to load XML file resource</div>';
-				    } else {
-						if ($xmlElement->count() == 0) {
-					    //it's empty
-					    echo '<div class="info-message">Select a valid entry</div>';
-					    
-					    // print_r($xmlElement);
-					}
-					else {
-					    //XML object has children
-					    // echo "no empty"; echo "<br />";
-					    echo '<table class="table table-striped table1">';
-					    echo '<tr><th>Name</th><th>Symbol</th><th>Exchange</th><th>Details</th></tr>';
-
-					    foreach ($xmlElement->LookupResult as $result) {
-					    	echo '<tr>';
-						   // print_r($result);
-					    	echo '<td>' . $result->Name . '</td>';
-					    	echo '<td>' . $result->Symbol . '</td>';
-					    	echo '<td>' . $result->Exchange . '</td>';
-					    	echo '<td>' . '<a href="?input=' . rawurlencode(htmlspecialchars($_GET["input"])) . '&symbol=' . rawurlencode($result->Symbol) . '">More Info</a>' . '</td>';
-						   echo '</tr>';
-						}
-						echo "</table>";
+                            foreach ($xmlElement->LookupResult as $result) {
+                                echo '<tr>';
+                               // print_r($result);
+                                echo '<td>' . $result->Name . '</td>';
+                                echo '<td>' . $result->Symbol . '</td>';
+                                echo '<td>' . $result->Exchange . '</td>';
+                                echo '<td>' . '<a href="?input=' . rawurlencode(htmlspecialchars($_GET["input"])) . '&symbol=' . rawurlencode($result->Symbol) . '">More Info</a>' . '</td>';
+                               echo '</tr>';
+                            }
+                            echo "</table>";
 
 
-					    // print_r($xmlElement);
-					}
-					//    echo "<br /><br />";
-					//    print_r($xmlElement->Status);	
-				    }
-				}
-			?>
-		</div>
-    
-        <div class="well">Normal Well</div>
+                            // print_r($xmlElement);
+                        }
+                        //    echo "<br /><br />";
+                        //    print_r($xmlElement->Status);	
+                        }
+                    }
+                ?>
+            </div>
+        </div>    
 	</div>    
 
     <!-- ============= JS scripts ============= -->
@@ -447,6 +393,11 @@
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!--    <script src="js/bootstrap.min.js"></script>-->
+    
+    <!-- JavaScript Includes for Tabs -->
+    <script src="js/transition.js"></script>
+    <script src="js/tab.js"></script>
+    <script src="js/dropdown.js"></script>    
 
     <script>
     // A $( document ).ready() block.
