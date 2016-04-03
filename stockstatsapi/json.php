@@ -1,4 +1,5 @@
 <?php
+    header("Access-Control-Allow-Origin: *");
     function generate_error_response($error_message){
         $php_response = ["Error" => "Message: " . $error_message];
         $json_response = json_encode($php_response);
