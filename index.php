@@ -66,8 +66,6 @@
 
         .form-input {
             margin-top: 20px;
-            margin-left: 10px;
-            text-align: left;
         }
 
         .form-title {
@@ -77,7 +75,6 @@
 
         .box {
             display:inline-block;
-            vertical-align:top;
         }
 
         .inlined {
@@ -197,36 +194,40 @@
     
     <div class="centered">
     	<div class="well well-lg">
-			<h4 class="form-title">Stock Market Search</h1>
-
-			<form class="form-inline" id="inputForm">
-				<div class="form-input">
-					<div id="content">				
+			<h4 class="form-title">Stock Market Search</h4>
+        
+            <form class="form-horizontal">
+                <div class="form-group">    
+                    <label for="input" class="col-sm-3 control-label">
+                        Enter the stock name or symbol:<span class="red-letter">*</span> 
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="input" name="input" placeholder="e.g. Apple Inc or AAPL"
+                                required pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]*$"> </input>
+                    </div>
+                    <div class="col-sm-2">
                         <div class="box">
-                            <!--<div class="col-lg-6">-->
-                            <label for="input">Enter the stock name or symbol:<span class="red-letter">*</span> </label>
-                            <div class="box">
-                                <input type="text" class="form-control" id="input" name="input" placeholder="e.g. Apple Inc or AAPL"
-                                        required pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]*$"> </input>
-                                <div class="form-block feedback-message">                                    
-                                </div>
-                            </div>
-                            <div class="box">
-                                <button id="get-quote-button" type="submit" class="btn btn-primary" autofocus>
-                                    <span class="glyphicon glyphicon-search"></span> Get Quote
-                                </button>								
-                                <button id="clear-button" type="button" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-refresh"></span> Clear
-                                </button>
-                                <div class="form-block">
-                                    <div class="bold-font">Powered By: <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo"></div>
-                                </div>
-                            </div>
-                            <!--</div>-->
-						</div>
-					</div>				
-				</div>
-			</form>
+                            <button id="get-quote-button" type="submit" class="btn btn-primary" autofocus>
+                                <span class="glyphicon glyphicon-search"></span> Get Quote
+                            </button>								
+                            <button id="clear-button" type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-refresh"></span> Clear
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6">
+                        <div class="form-block feedback-message">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="bold-font text-left">Powered By: <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo"></div>
+                    </div>
+                </div>            
+            </form>
         </div>
     
         <hr>
@@ -318,14 +319,7 @@
                                 </ul>                              
                             </div>                            
                             <div id="myTabContent1" class="tab-content">
-                                <div class="tab-pane fade in active" id="currentstocks">
-                                    
-                                    <p class="text-right">
-                                        <img src="img/fb-icon.png" class="fb-icon" alt="Facebook Connect button">
-                                        <button type="button" class="btn btn-default" aria-label="Left Align">
-                                            <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-                                        </button>
-                                    </p>                                    
+                                <div class="tab-pane fade in active" id="currentstocks">                                  
                                     
                                     <div class="row">
                                         <div class="col-md-6">
@@ -368,6 +362,14 @@
                                             </table>                                        
                                         </div>
                                         <div class="col-md-6">
+                                            <div class="col-md-12">
+                                                <p class="text-right">
+                                                    <img src="img/fb-icon.png" class="fb-icon" alt="Facebook Connect button">
+                                                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                                                        <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+                                                    </button>
+                                                </p>                                                  
+                                            </div>
                                             <img src="http://chart.finance.yahoo.com/t?s=AAPL&lang=en-US&width=600&height=500" alt="Yahoo Chart Finance graphic">
                                         </div>                                        
                                     </div>
@@ -469,7 +471,7 @@
         });
         
         $("#get-quote-button").click(function(evt) {
-//            $("inputForm")[0].checkValidity();
+//            $("#inputForm")[0].checkValidity();
             evt.preventDefault();
             $.ajax({
               url: "http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
@@ -486,7 +488,7 @@
                 } else {
                     /* Error */
                     $(".feedback-message").html(
-                        '<span class="red-letter bold-font">Select a valid entry</span>'
+                        '<p class="red-letter text-left">Select a valid entry</p>'
                     );
                     /*alert("Error");*/
                 }  
