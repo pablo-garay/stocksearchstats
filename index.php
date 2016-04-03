@@ -430,8 +430,19 @@
     $( document ).ready(function() {
         console.log( "ready!" );
         
+        function enableStockDetailsButton() {
+            $('#stock-details-button').prop('disabled', false);
+            $('#stock-details-button').removeAttr('disabled');
+        }
+        
         // disable button to show stock details
-        $('#stock-details-button').prop('disabled', true);
+        function disableStockDetailsButton() {
+            $('#stock-details-button').prop('disabled', true);
+            $('#stock-details-button').attr('disabled', 'disabled');
+        }
+        
+        // disable button to show stock details
+        disableStockDetailsButton();
         
         function log( message ) {
           $( "<div>" ).text( message ).prependTo( "#log" );
@@ -499,8 +510,7 @@
                     $("#stock-details-table-opening-price").html(data["Open"]);
                     
                     // enable show stock details button again
-                    $('#stock-details-button').prop('disabled', false);
-                    $('#stock-details-button').removeAttr('disabled');
+                    enableStockDetailsButton();
                     
                 } else {
                     /* Error */
@@ -508,6 +518,7 @@
                         '<p class="red-letter text-left">Select a valid entry</p>'
                     );
                     /*alert("Error");*/
+                    disableStockDetailsButton();
                 }  
               }
             });
@@ -519,8 +530,7 @@
             $('#resultsArea').html("");
             
             // disable button to show stock details
-            $('#stock-details-button').prop('disabled', true);
-            $('#stock-details-button').attr('disabled', 'disabled');
+            disableStockDetailsButton();
         });        
 
         $(".fb-icon").click(function(){
