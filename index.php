@@ -100,9 +100,6 @@
             font-weight: bold;
             text-align: left;
         }
-        td.td2 {
-            text-align: center;
-        }
 
         .table, .table1, .table2{
             width: 100px;
@@ -265,9 +262,11 @@
                                     <input type="checkbox" checked data-toggle="toggle">
                                     <!-- left button -->
                                     <button type="button" class="btn btn-default" aria-label="Left Align">
-                                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                                    </button>                    
-                                    <a class="btn btn-default" href="#myCarousel" role="button" data-slide="next">
+                                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"
+                                             data-toggle="tooltip" data-placement="bottom" title="Refresh"></span>
+                                    </button>
+                                    <a class="btn btn-default" id="stock-details-button" href="#myCarousel" role="button" data-slide="next" 
+                                       disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Display Stock Information">
                                         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                                         <span class="sr-only">Next</span>
                                     </a>                                    
@@ -293,7 +292,8 @@
                             
                         <div class="row">
                             <div class="col-md-1">
-                                <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev">
+                                <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev"
+                                    data-toggle="tooltip" data-placement="bottom" title="Display Favorite List">
                                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
                                 </a>                            
@@ -327,37 +327,37 @@
                                                 <p class="text-left bold-font">Stock Details</p>                                            
                                             </div>
                                             <table class="table table-striped table2">
-                                                <tr><th>Name</th><td class="td2">
+                                                <tr><th>Name</th><td id="stock-details-table-name">
                                                 </td></tr>
 
-                                                <tr><th>Symbol</th><td class="td2">
+                                                <tr><th>Symbol</th><td id="stock-details-table-symbol">
                                                 </td></tr>
 
-                                                <tr><th>Last Price</th><td class="td2">
+                                                <tr><th>Last Price</th><td id="stock-details-table-last-price">
                                                 </td></tr>
 
-                                                <tr><th>Change (Change Percent)</th><td class="td2">
+                                                <tr><th>Change (Change Percent)</th><td id="stock-details-table-change">
                                                 </td></tr>
 
-                                                <tr><th>Time and Date</th><td class="td2">
+                                                <tr><th>Time and Date</th><td id="stock-details-table-timestamp">
                                                 </td></tr>
 
-                                                <tr><th>Market Cap</th><td class="td2">    
+                                                <tr><th>Market Cap</th><td id="stock-details-table-marketcap">    
                                                 </td></tr>
 
-                                                <tr><th>Volume</th><td class="td2">
+                                                <tr><th>Volume</th><td id="stock-details-table-volume">
                                                 </td></tr>
 
-                                                <tr><th>Change YTD (Change Percent YTD)</th><td class="td2">
+                                                <tr><th>Change YTD (Change Percent YTD)</th><td id="stock-details-table-ytd">
                                                 </td></tr>
 
-                                                <tr><th>High Price</th><td class="td2">
+                                                <tr><th>High Price</th><td id="stock-details-table-high-price">
                                                 </td></tr>
 
-                                                <tr><th>Low Price</th><td class="td2">
+                                                <tr><th>Low Price</th><td id="stock-details-table-low-price">
                                                 </td></tr>
 
-                                                <tr><th>Opening Price</th><td class="td2">
+                                                <tr><th>Opening Price</th><td id="stock-details-table-opening-price">
                                                 </td></tr>
                                             </table>                                        
                                         </div>
@@ -430,6 +430,9 @@
     $( document ).ready(function() {
         console.log( "ready!" );
         
+        // disable button to show stock details
+        $('#stock-details-button').prop('disabled', true);
+        
         function log( message ) {
           $( "<div>" ).text( message ).prependTo( "#log" );
           $( "#log" ).scrollTop( 0 );
@@ -481,10 +484,24 @@
                 symbol: $( "#input" ).val()
               },
               success: function( data ) {
-                if (!(data["Error"])){
+                if (!(data["Error"])){ /* successful data retrieval */
                     $(".feedback-message").html('');                    
-                    var str = JSON.stringify(data);
-                    alert( str );
+                    $("#stock-details-table-name").html(data["Name"]);
+                    $("#stock-details-table-symbol").html(data["Symbol"]);
+                    $("#stock-details-table-last-price").html(data["Last Price"]);
+                    $("#stock-details-table-change").html(data["Change (Change Percent)"]);
+                    $("#stock-details-table-timestamp").html(data["Time and Date"]);
+                    $("#stock-details-table-marketcap").html(data["Market Cap"]);
+                    $("#stock-details-table-volume").html(data["Volume"]);
+                    $("#stock-details-table-ytd").html(data["Change YTD (Change Percent YTD)"]);
+                    $("#stock-details-table-high-price").html(data["High"]);
+                    $("#stock-details-table-low-price").html(data["Low"]);
+                    $("#stock-details-table-opening-price").html(data["Open"]);
+                    
+                    // enable show stock details button again
+                    $('#stock-details-button').prop('disabled', false);
+                    $('#stock-details-button').removeAttr('disabled');
+                    
                 } else {
                     /* Error */
                     $(".feedback-message").html(
@@ -499,7 +516,11 @@
         $("#clear-button").click(function(evt) {
             evt.preventDefault();
             $('#input').val("");
-            $('#resultsArea').html("");	            
+            $('#resultsArea').html("");
+            
+            // disable button to show stock details
+            $('#stock-details-button').prop('disabled', true);
+            $('#stock-details-button').attr('disabled', 'disabled');
         });        
 
         $(".fb-icon").click(function(){
@@ -508,6 +529,9 @@
               href: 'https://developers.facebook.com/docs/'
             }, function(response){});
         });
+        
+        /* Init tooltips. For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself. */
+        $('[data-toggle="tooltip"]').tooltip();
     });
     
     </script>
