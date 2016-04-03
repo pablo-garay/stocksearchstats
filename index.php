@@ -92,7 +92,7 @@
 
         table, th, td {
             border-collapse: collapse;
-            font-family: Arial, Helvetica, Verdana, sans-serif;
+            /*font-family: Arial, Helvetica, Verdana, sans-serif;*/
         }
         th, td {
             text-align: left;
@@ -107,12 +107,12 @@
         }
 
         .table1, .table2{
-            width: 710px;
+            width: 100px;
         }
 
-        .table2 {
+        /*.table2 {
             height: 432px;
-        }
+        }*/
 
         .markit-on-demand-logo {
             height: 20px;
@@ -131,7 +131,7 @@
             margin: 0 auto;
             padding: 4px;
             width: 700px;
-            font-family: Arial, Helvetica, sans-serif;
+/*            font-family: Arial, Helvetica, sans-serif;*/
             text-align: center;
         }
         
@@ -140,11 +140,15 @@
         }
         
         .red-letter {
-            color: #E9072D;
+            color: #ED001E;
         }
         
         .btn {
-            font-family: Lucida Sans Unicode;
+/*            font-family: Lucida Sans Unicode;*/
+        }
+        .fb-icon {
+            width: 40px;
+            width: 34px;
         }
     </style>
     
@@ -160,51 +164,63 @@
     <![endif]-->      
       
     <!-- Custom styles for this template -->
-    <link href="carousel.css" rel="stylesheet">
+    <link href="carousel.css" rel="stylesheet">   
     
     <style>
-        .well {
-            background: white;
-        }
         .carousel div.item{
           background-color: white;
         }  
     </style>
-    
-    <!-- Clear button's logic -->
-    <script type="text/javascript">
-        function clearSearch(){
-            document.getElementById("input").value="";
-            document.getElementById("resultsArea").innerHTML = "";		
-        }
-    </script>
 </head>
 
 <body>
+    <!-- Facebook's basic SDK version should be inserted it directly after the opening <body> tag -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '906240542820734',
+          xfbml      : true,
+          version    : 'v2.5'
+        });         
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <!-- End of FB SDK's insertion code snippet -->
+    
     <div class="centered">
     	<div class="well well-lg">
 			<h1 class="form-title">Stock Market Search</h1>
 
-			<form class="form-inline" id= "inputForm" method="GET" action="">
+			<form class="form-inline" id="inputForm">
 				<div class="form-input">
 					<div id="content">				
                         <div class="box">
                             <!--<div class="col-lg-6">-->
-                            <label for="input">Enter the stock name or symbol:<span class="red-letter">*</span> </label>						
+                            <label for="input">Enter the stock name or symbol:<span class="red-letter">*</span> </label>
+                            <div class="box">
                                 <input type="text" class="form-control" id="input" name="input" placeholder="e.g. Apple Inc or AAPL"
-                                    required pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]*$" 
-                                    value='<?php if (isset($_GET["input"])) echo htmlspecialchars($_GET["input"]); ?>' > </input>
-                                    <div class="box">
-                                        <button type="submit" class="btn btn-primary" autofocus>
-                                            <span class="glyphicon glyphicon-search"></span> Get Quote
-                                        </button>								
-                                        <button type="button" class="btn btn-default" onclick="clearSearch();">
-                                            <span class="glyphicon glyphicon-refresh"></span> Clear
-                                        </button>
-                                            <div class="form-block">
-                                                <div class="bold-font">Powered By: <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo"></div>
-                                            </div>
-                                    </div>
+                                        required pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]*$"> </input>
+                                <div class="form-block feedback-message">                                    
+                                </div>
+                            </div>
+                            <div class="box">
+                                <button id="get-quote-button" type="submit" class="btn btn-primary" autofocus>
+                                    <span class="glyphicon glyphicon-search"></span> Get Quote
+                                </button>								
+                                <button id="clear-button" type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-refresh"></span> Clear
+                                </button>
+                                <div class="form-block">
+                                    <div class="bold-font">Powered By: <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo"></div>
+                                </div>
+                            </div>
                             <!--</div>-->
 						</div>
 					</div>				
@@ -218,6 +234,7 @@
             <!--<button type="button" class="btn btn-default" aria-label="Left Align">
               <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
             </button>-->
+<!--
             <button type="button" class="btn btn-default" aria-label="Left Align">
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             </button>
@@ -226,6 +243,7 @@
             </button>
             <button type="button" class="btn btn-default" aria-label="Left Align">
               <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+-->
             </button>
             
             <!-- Carousel
@@ -233,87 +251,107 @@
             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">             
               <div class="carousel-inner" role="listbox">
                 <div class="item active">
-                    Favorite List
-                    <!-- left button -->
-                    <button type="button" class="btn btn-default" aria-label="Left Align">
-                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                    </button>                    
-                    <a class="btn btn-default" href="#myCarousel" role="button" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>                                        
-                    
-                    <table class="table table-striped">
-                        <th>Symbol</th>
-                        <th>Company Name</th>
-                        <th>Stock Price</th>
-                        <th>Change (Change Percent)</th>
-                        <th>Market Cap</th>
-                    </table>
-                </div>
-                <div class="item">                  
-                    Stock Details
-                    <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <div class="page-header">
-                        <ul id="myTab1" class="nav nav-pills">
-                            <li class="active"><a href="#currentstocks" data-toggle="tab">
-                                    <span class="glyphicon glyphicon-dashboard"></span> Current Stock</a>                                
-                            </li>
-                            <li><a href="#historicalcharts" data-toggle="tab">
-                                    <span class="glyphicon glyphicon-stats"></span> Historical Charts</a>
-                            </li>
-                            <li><a href="#newsfeed" data-toggle="tab">
-                                    <span class="glyphicon glyphicon-link"></span> News Feeds</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="myTabContent1" class="tab-content">
-                        <div class="tab-pane fade in active" id="currentstocks">
-                            <table class="table table-striped table2">
-                                <tr><th>Name</th><td class="td2">
-                                </td></tr>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Favorite List
 
-                                <tr><th>Symbol</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>Last Price</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>Change (Change Percent)</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>Time and Date</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>Market Cap</th><td class="td2">    
-                                </td></tr>
-
-                                <tr><th>Volume</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>Change YTD (Change Percent YTD)</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>High Price</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>Low Price</th><td class="td2">
-                                </td></tr>
-
-                                <tr><th>Opening Price</th><td class="td2">
-                                </td></tr>
+                            Automatic Refresh:
+                            <input type="checkbox" checked data-toggle="toggle">
+                            <!-- left button -->
+                            <button type="button" class="btn btn-default" aria-label="Left Align">
+                              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                            </button>                    
+                            <a class="btn btn-default" href="#myCarousel" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>                                
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <th>Symbol</th>
+                                <th>Company Name</th>
+                                <th>Stock Price</th>
+                                <th>Change (Change Percent)</th>
+                                <th>Market Cap</th>
                             </table>
-                            
-                            <img src="http://chart.finance.yahoo.com/t?s=TSLA&lang=en-US&width=400&height=300" alt="Yahoo Chart Finance graphic">
                         </div>
-                        <div class="tab-pane fade" id="historicalcharts">
-                            <p>Content 2</p>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Stock Details
+                            <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
                         </div>
-                        <div class="tab-pane fade" id="newsfeed">
-                            <p>Content 3</p>
+                        <div class="panel-body">
+                            <div class="page-header">
+                                <ul id="myTab1" class="nav nav-pills">
+                                    <li class="active"><a href="#currentstocks" data-toggle="tab">
+                                            <span class="glyphicon glyphicon-dashboard"></span> Current Stock</a>                                
+                                    </li>
+                                    <li><a href="#historicalcharts" data-toggle="tab">
+                                            <span class="glyphicon glyphicon-stats"></span> Historical Charts</a>
+                                    </li>
+                                    <li><a href="#newsfeed" data-toggle="tab">
+                                            <span class="glyphicon glyphicon-link"></span> News Feeds</a>
+                                    </li>
+                                </ul>                              
+                            </div>                            
+                            <div id="myTabContent1" class="tab-content">
+                                <div class="tab-pane fade in active" id="currentstocks">
+                                    
+                                    <img src="img/fb-icon.png" class="fb-icon" alt="Facebook Connect button">
+                                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                                        <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+                                    </button>
+                                    
+                                    <table class="table table-striped table2">
+                                        <tr><th>Name</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Symbol</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Last Price</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Change (Change Percent)</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Time and Date</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Market Cap</th><td class="td2">    
+                                        </td></tr>
+
+                                        <tr><th>Volume</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Change YTD (Change Percent YTD)</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>High Price</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Low Price</th><td class="td2">
+                                        </td></tr>
+
+                                        <tr><th>Opening Price</th><td class="td2">
+                                        </td></tr>
+                                    </table>
+
+                                    <img src="http://chart.finance.yahoo.com/t?s=TSLA&lang=en-US&width=400&height=300" alt="Yahoo Chart Finance graphic">
+                                </div>
+                                <div class="tab-pane fade" id="historicalcharts">
+                                    <p>Content 2</p>
+                                </div>
+                                <div class="tab-pane fade" id="newsfeed">
+                                    <p>Content 3</p>
+                                </div>
+                            </div>                            
                         </div>
                     </div>                
                 </div>
@@ -321,57 +359,6 @@
               
             </div>
             <!-- /.carousel -->
-
-            <div id="resultsArea">          
-                <?php
-                    if (isset($_GET["symbol"])){
-
-                    } else if(isset($_GET["input"])){
-                        // print_r($_POST);
-
-                        /* Output debugging data */
-                        // $xml = file_get_contents("http://dev.markitondemand.com/MODApis/Api/v2/Lookup/xml?input=APPL");
-                        // echo "<br />";
-                        // print_r($xml);
-
-                        /* XML */
-                        $xmlElement = @simplexml_load_file('http://dev.markitondemand.com/MODApis/Api/v2/Lookup/xml?input=' . rawurlencode(htmlspecialchars($_GET["input"])));	 
-
-                        if ($xmlElement === false){ /* conditional for error handling */
-                            echo '<div class="info-message">Error while trying to load XML file resource</div>';
-                        } else {
-                            if ($xmlElement->count() == 0) {
-                            //it's empty
-                            echo '<div class="info-message">Select a valid entry</div>';
-
-                            // print_r($xmlElement);
-                        }
-                        else {
-                            //XML object has children
-                            // echo "no empty"; echo "<br />";
-                            echo '<table class="table table-striped table1">';
-                            echo '<tr><th>Name</th><th>Symbol</th><th>Exchange</th><th>Details</th></tr>';
-
-                            foreach ($xmlElement->LookupResult as $result) {
-                                echo '<tr>';
-                               // print_r($result);
-                                echo '<td>' . $result->Name . '</td>';
-                                echo '<td>' . $result->Symbol . '</td>';
-                                echo '<td>' . $result->Exchange . '</td>';
-                                echo '<td>' . '<a href="?input=' . rawurlencode(htmlspecialchars($_GET["input"])) . '&symbol=' . rawurlencode($result->Symbol) . '">More Info</a>' . '</td>';
-                               echo '</tr>';
-                            }
-                            echo "</table>";
-
-
-                            // print_r($xmlElement);
-                        }
-                        //    echo "<br /><br />";
-                        //    print_r($xmlElement->Status);	
-                        }
-                    }
-                ?>
-            </div>
         </div>    
 	</div>    
 
@@ -397,7 +384,17 @@
     <!-- JavaScript Includes for Tabs -->
     <script src="js/transition.js"></script>
     <script src="js/tab.js"></script>
-    <script src="js/dropdown.js"></script>    
+    <script src="js/dropdown.js"></script>
+    
+    <!--  load Bootstrap Toggle library -->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <style>
+        .well {
+            background: white;
+        }        
+    </style>
 
     <script>
     // A $( document ).ready() block.
@@ -412,7 +409,7 @@
         $( "#input" ).autocomplete({
           source: function( request, response ) {
             $.ajax({
-              url: "http://localhost/stocksearchstats/stockstatsapi/json.php",
+              url: "http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
               dataType: "json",
               type: 'GET',
               data: {
@@ -442,6 +439,45 @@
           close: function() {
             $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
           }
+        });
+        
+        $("#get-quote-button").click(function(evt) {
+//            $("inputForm")[0].checkValidity();
+            evt.preventDefault();
+            $.ajax({
+              url: "http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
+              dataType: "json",
+              type: 'GET',
+              data: {
+                symbol: $( "#input" ).val()
+              },
+              success: function( data ) {
+                if (!(data["Error"])){
+                    $(".feedback-message").html('');                    
+                    var str = JSON.stringify(data);
+                    alert( str );
+                } else {
+                    /* Error */
+                    $(".feedback-message").html(
+                        '<span class="red-letter bold-font">Select a valid entry</span>'
+                    );
+                    /*alert("Error");*/
+                }  
+              }
+            });
+        });        
+        
+        $("#clear-button").click(function(evt) {
+            evt.preventDefault();
+            $('#input').val("");
+            $('#resultsArea').html("");	            
+        });        
+
+        $(".fb-icon").click(function(){
+            FB.ui({
+              method: 'share',
+              href: 'https://developers.facebook.com/docs/'
+            }, function(response){});
         });
     });
     
