@@ -16,6 +16,8 @@
             background-size: cover;
             text-align: left;
             margin: 0;
+            font-family: Arial;
+            font-size: 14px;
         }
         div.centered 
         {
@@ -70,7 +72,6 @@
 
         .form-title {
             font-weight: bold;
-            font-style: italic;
             margin: 0; padding: 0;
         }
 
@@ -106,7 +107,7 @@
             text-align: center;
         }
 
-        .table1, .table2{
+        .table, .table1, .table2{
             width: 100px;
         }
 
@@ -135,7 +136,7 @@
             text-align: center;
         }
         
-        .bold-font {
+        .bold-font,  .panel-font-title {
             font-weight: bold;
         }
         
@@ -196,7 +197,7 @@
     
     <div class="centered">
     	<div class="well well-lg">
-			<h1 class="form-title">Stock Market Search</h1>
+			<h4 class="form-title">Stock Market Search</h1>
 
 			<form class="form-inline" id="inputForm">
 				<div class="form-input">
@@ -253,18 +254,25 @@
                 <div class="item active">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Favorite List
-
-                            Automatic Refresh:
-                            <input type="checkbox" checked data-toggle="toggle">
-                            <!-- left button -->
-                            <button type="button" class="btn btn-default" aria-label="Left Align">
-                              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                            </button>                    
-                            <a class="btn btn-default" href="#myCarousel" role="button" data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>                                
+                            
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <p class="text-left panel-font-title">Favorite List</p>                                    
+                                </div>
+                                <div class="col-md-3">
+                                    Automatic Refresh:
+                                    <input type="checkbox" checked data-toggle="toggle">
+                                    <!-- left button -->
+                                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                    </button>                    
+                                    <a class="btn btn-default" href="#myCarousel" role="button" data-slide="next">
+                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>                                    
+                                </div>                          
+                            </div>
+                            
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped">
@@ -273,6 +281,7 @@
                                 <th>Stock Price</th>
                                 <th>Change (Change Percent)</th>
                                 <th>Market Cap</th>
+                                <th></th>
                             </table>
                         </div>
                     </div>
@@ -280,11 +289,19 @@
                 <div class="item">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Stock Details
-                            <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
+                            
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>                            
+                            </div>
+                            <div class="col-md-11">
+                                <p class="text-center panel-font-title">Stock Details</p>
+                            </div>
+                        </div>
+                            
                         </div>
                         <div class="panel-body">
                             <div class="page-header">
@@ -303,47 +320,57 @@
                             <div id="myTabContent1" class="tab-content">
                                 <div class="tab-pane fade in active" id="currentstocks">
                                     
-                                    <img src="img/fb-icon.png" class="fb-icon" alt="Facebook Connect button">
-                                    <button type="button" class="btn btn-default" aria-label="Left Align">
-                                        <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-                                    </button>
+                                    <p class="text-right">
+                                        <img src="img/fb-icon.png" class="fb-icon" alt="Facebook Connect button">
+                                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                                            <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+                                        </button>
+                                    </p>                                    
                                     
-                                    <table class="table table-striped table2">
-                                        <tr><th>Name</th><td class="td2">
-                                        </td></tr>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="col-md-3">
+                                                <p class="text-left bold-font">Stock Details</p>                                            
+                                            </div>
+                                            <table class="table table-striped table2">
+                                                <tr><th>Name</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Symbol</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>Symbol</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Last Price</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>Last Price</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Change (Change Percent)</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>Change (Change Percent)</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Time and Date</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>Time and Date</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Market Cap</th><td class="td2">    
-                                        </td></tr>
+                                                <tr><th>Market Cap</th><td class="td2">    
+                                                </td></tr>
 
-                                        <tr><th>Volume</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>Volume</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Change YTD (Change Percent YTD)</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>Change YTD (Change Percent YTD)</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>High Price</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>High Price</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Low Price</th><td class="td2">
-                                        </td></tr>
+                                                <tr><th>Low Price</th><td class="td2">
+                                                </td></tr>
 
-                                        <tr><th>Opening Price</th><td class="td2">
-                                        </td></tr>
-                                    </table>
-
-                                    <img src="http://chart.finance.yahoo.com/t?s=TSLA&lang=en-US&width=400&height=300" alt="Yahoo Chart Finance graphic">
+                                                <tr><th>Opening Price</th><td class="td2">
+                                                </td></tr>
+                                            </table>                                        
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img src="http://chart.finance.yahoo.com/t?s=AAPL&lang=en-US&width=600&height=500" alt="Yahoo Chart Finance graphic">
+                                        </div>                                        
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="historicalcharts">
                                     <p>Content 2</p>
