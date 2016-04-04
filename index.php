@@ -370,7 +370,7 @@
                                                     </button>
                                                 </p>                                                  
                                             </div>
-                                            <img src="http://chart.finance.yahoo.com/t?s=AAPL&lang=en-US&width=600&height=500" alt="Yahoo Chart Finance graphic">
+                                            <img id="yahoo-finance-stats-chart">
                                         </div>                                        
                                     </div>
                                 </div>
@@ -497,7 +497,8 @@
               },
               success: function( data ) {
                 if (!(data["Error"])){ /* successful data retrieval */
-                    $(".feedback-message").html('');                    
+                    $(".feedback-message").html('');
+                    /* populate or update table data */
                     $("#stock-details-table-name").html(data["Name"]);
                     $("#stock-details-table-symbol").html(data["Symbol"]);
                     $("#stock-details-table-last-price").html(data["Last Price"]);
@@ -510,7 +511,10 @@
                     $("#stock-details-table-low-price").html(data["Low"]);
                     $("#stock-details-table-opening-price").html(data["Open"]);
                     
-                    /* enable show stock details button again */
+                    $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + $( "#input" ).val() + '&lang=en-US&width=600&height=500');
+                    $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
+                    
+                    /* enable show stock details button */
                     enableStockDetailsButton();
                     
                     /* switch to Stock details slide automatically */
@@ -543,7 +547,7 @@
         $(".fb-icon").click(function(){
             FB.ui({
                 method: 'feed',
-                /*link: 'http://chart.finance.yahoo.com/t?s=AAPL&lang=en-US&width=600&height=500',*/
+                /*link:  'http://chart.finance.yahoo.com/t?s=' + $("#stock-details-table-symbol").html() + '&lang=en-US&width=900&height=1200',*/
                 picture: 'http://chart.finance.yahoo.com/t?s=' + $("#stock-details-table-symbol").html() + '&lang=en-US&width=900&height=1200',
                 name: 'Current Stock Price of ' + $("#stock-details-table-name").html() + ' is ' + $("#stock-details-table-last-price").html(),
                 caption: 'Stock Information of ' + $("#stock-details-table-name").html() + ' (' + $("#stock-details-table-symbol").html() + ')',
