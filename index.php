@@ -261,9 +261,9 @@
                                     Automatic Refresh:
                                     <input type="checkbox" checked data-toggle="toggle">
                                     <!-- left button -->
-                                    <button type="button" class="btn btn-default" aria-label="Left Align">
-                                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"
-                                             data-toggle="tooltip" data-placement="bottom" title="Refresh"></span>
+                                    <button type="button" class="btn btn-default" aria-label="Left Align"
+                                            data-toggle="tooltip" data-placement="bottom" title="Refresh">
+                                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                     </button>
                                     <a class="btn btn-default" id="stock-details-button" href="#myCarousel" role="button" data-slide="next" 
                                        disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Display Stock Information">
@@ -317,7 +317,7 @@
                                             <span class="glyphicon glyphicon-link"></span> News Feeds</a>
                                     </li>
                                 </ul>                              
-                            </div>                            
+                            </div>
                             <div id="myTabContent1" class="tab-content">
                                 <div class="tab-pane fade in active" id="currentstocks">                                  
                                     
@@ -443,6 +443,7 @@
         
         // disable button to show stock details
         disableStockDetailsButton();
+        enableStockDetailsButton();
         
         function log( message ) {
           $( "<div>" ).text( message ).prependTo( "#log" );
@@ -509,8 +510,11 @@
                     $("#stock-details-table-low-price").html(data["Low"]);
                     $("#stock-details-table-opening-price").html(data["Open"]);
                     
-                    // enable show stock details button again
+                    /* enable show stock details button again */
                     enableStockDetailsButton();
+                    
+                    /* switch to Stock details slide automatically */
+                    $("#myCarousel").carousel(1);
                     
                 } else {
                     /* Error */
@@ -519,6 +523,8 @@
                     );
                     /*alert("Error");*/
                     disableStockDetailsButton();
+                    /* switch back to first slide */
+                    $("#myCarousel").carousel(0);
                 }  
               }
             });
@@ -529,15 +535,33 @@
             $('#input').val("");
             $('#resultsArea').html("");
             
-            // disable button to show stock details
+            /* disable button to show stock details and switch back to first slide */
             disableStockDetailsButton();
-        });        
+            $("#myCarousel").carousel(0);
+        });
 
         $(".fb-icon").click(function(){
             FB.ui({
+                method: 'feed',
+                /*link: 'http://chart.finance.yahoo.com/t?s=AAPL&lang=en-US&width=600&height=500',*/
+                picture: 'http://chart.finance.yahoo.com/t?s=' + $("#stock-details-table-symbol").html() + '&lang=en-US&width=900&height=1200',
+                name: 'Current Stock Price of ' + $("#stock-details-table-name").html() + ' is ' + $("#stock-details-table-last-price").html(),
+                caption: 'Stock Information of ' + $("#stock-details-table-name").html() + ' (' + $("#stock-details-table-symbol").html() + ')',
+                description: 'LAST TRADE PRICE: ' + $("#stock-details-table-last-price").html() + ', CHANGE: ' + $("#stock-details-table-change").html()
+            }, function(response){
+                // Debug response (optional)
+                /*console.log(response);*/
+                if (response && !response.error_message) {
+                  alert('Posted Successfully');
+                } else {
+                  alert('Not posted');
+                }
+            });
+            
+            /*FB.ui({
               method: 'share',
-              href: 'https://developers.facebook.com/docs/'
-            }, function(response){});
+              href: 'http://chart.finance.yahoo.com/t?s=AAPL&lang=en-US&width=600&height=500'
+            }, function(response){});*/
         });
         
         /* Init tooltips. For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself. */
