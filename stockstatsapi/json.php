@@ -72,9 +72,9 @@
             }						
         }
 
-    } else if(isset($_GET["input"])){    
+    } else if(isset($_GET["input"])){
         /* JSON */
-        $json = @file_get_contents('http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' . rawurlencode(htmlspecialchars($_GET["input"])));
+        $json = @file_get_contents( 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' . rawurlencode(htmlspecialchars($_GET["input"])) );
         
         if ($json === FALSE){ /* conditional for error handling */
             return generate_error_response("Error while trying to access resource to generate response");
@@ -107,6 +107,27 @@
         //    echo "<br /><br />";
         //    print_r($xmlElement->Status);	*/
         }
+        
+    } else if(isset($_GET["newsq"])){
+        // Replace this value with your account key
+        $accountKey = 'fTTAa7OTU3P+kcix41pXlsmXsgiPJ8Z35z5FOIKD9Q4';
+        $ServiceRootURL =  'https://api.datamarket.azure.com/Bing/Search/v1/';
+        $WebSearchURL = $ServiceRootURL . 'News?$format=json&Query=';
+
+        $context = stream_context_create(array(
+            'http' => array(
+                'request_fulluri' => true,
+                'header'  => "Authorization: Basic " . base64_encode($accountKey . ":" . $accountKey)
+            )
+        ));
+        $request = $WebSearchURL . urlencode( '\''  . rawurlencode(htmlspecialchars($_GET["newsq"])) . '\'');
+        /*echo($request . "<br /><br />");*/
+        $response = file_get_contents($request, 0, $context);
+        echo $response;
+
+        /*$jsonobj = json_decode($response);
+        print_r($jsonobj);*/
+        
     } else {
         return generate_error_response("No parameters have been provided");
     }
