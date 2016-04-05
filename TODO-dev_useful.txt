@@ -28,3 +28,14 @@ Change AWS for GAE (faster acc. to prof.)
 Responsive design - try on different screen sizes and devices
 
 Add links where appropriate - watch demonstration video
+
+
+Interactive chart
+Local storage and Favorites
+
+Fix Well resizing
+
+Refresh every 5 secs.
+Star yellow, white
+
+Increase, decrease image indicator
