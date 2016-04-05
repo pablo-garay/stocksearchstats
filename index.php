@@ -19,32 +19,14 @@
             font-family: Arial;
             font-size: 14px;
         }
-        div.centered 
+        div.layout 
         {
-            text-align: center;
-            padding: 4em;
-        }
-
-        div.centered table 
-        {
-            margin: 0 auto; 
+            padding-top: 1em;
+            padding-left: 14em; padding-right: 14em;
         }
 
         h1 {
             margin: 0; padding: 0;
-        }
-
-        div.form-container {
-            background-color: #F5F5F5;
-            border: 1px solid;
-            border-color: #DCDCDC;
-            padding-top: 5px;
-            padding-bottom: 2em;
-            width: 700px;
-            height: 200px;
-            margin: 0 auto;
-            display: block;
-            margin-top: 10px; margin-bottom: 10px;
         }
 
         hr {
@@ -55,30 +37,13 @@
             margin: 0 auto; padding: 0;
         }
 
-        .form-blocks {
-            display: block;
-        }
-
         .form-block{
             margin-top: 5px;
             padding: 0;
         }
 
-        .form-input {
-            margin-top: 20px;
-        }
-
-        .form-title {
-            font-weight: bold;
-            margin: 0; padding: 0;
-        }
-
         .box {
             display:inline-block;
-        }
-
-        .inlined {
-            display: inline;
         }
 
         input[type=text]{
@@ -118,17 +83,6 @@
             height: 12px;
             width: 12px;
         }
-
-        .info-message {
-            background-color: #FCFBFA;
-            border: 2px solid;
-            border-color: #CCCBCB;
-            margin: 0 auto;
-            padding: 4px;
-            width: 700px;
-/*            font-family: Arial, Helvetica, sans-serif;*/
-            text-align: center;
-        }
         
         .bold-font,  .panel-font-title {
             font-weight: bold;
@@ -138,9 +92,6 @@
             color: #ED001E;
         }
         
-        .btn {
-/*            font-family: Lucida Sans Unicode;*/
-        }
         .fb-icon {
             width: 40px;
             width: 34px;
@@ -189,9 +140,9 @@
     </script>
     <!-- End of FB SDK's insertion code snippet -->
     
-    <div class="centered">
+    <div class="layout">
     	<div class="well well-lg">
-			<h4 class="form-title">Stock Market Search</h4>
+			<h4 class="text-center bold-font">Stock Market Search</h4>
         
             <form class="form-horizontal">
                 <div class="form-group">    
@@ -202,7 +153,7 @@
                         <input type="text" class="form-control" id="input" name="input" placeholder="e.g. Apple Inc or AAPL"
                                 required pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]*$"> </input>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="box">
                             <button id="get-quote-button" type="submit" class="btn btn-primary" autofocus>
                                 <span class="glyphicon glyphicon-search"></span> Get Quote
@@ -254,10 +205,10 @@
                         <div class="panel-heading">
                             
                             <div class="row">
-                                <div class="col-md-9">
+                                <div class="col-md-8">
                                     <p class="text-left panel-font-title">Favorite List</p>                                    
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4 text-right">
                                     Automatic Refresh:
                                     <input type="checkbox" checked data-toggle="toggle">
                                     <!-- left button -->
@@ -375,10 +326,24 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="historicalcharts">
-                                    <p>Content 2</p>
+                                    <p class="text-center">Historical charts</p>
                                 </div>
                                 <div class="tab-pane fade" id="newsfeed">
-                                    <p>Content 3</p>
+                                    <p class="text-center">News Feed</p>
+                                    <div class="well">
+                                        <span class="text-left">
+                                            <a href="http://www.watchlistnews.com/microsoft-co-msft-stake-reduced-by-strategy-asset-managers-llc/602122.html">Microsoft Co. (MSFT) Stake Reduced by Strategy Asset Managers LLC</a>
+                                        </span>
+                                        <p class="text-left">
+                                            Strategy Asset Managers LLC reduced its stake in shares of Microsoft Co. (NASDAQ:MSFT) by 2.8% during the fourth quarter, according to its most recent filing with the Securities and Exchange Commission. The firm owned 236,957 shares of the software giant ...
+                                        </p>
+                                        <p class="bold-font text-left">
+                                            Publisher: Watch List News
+                                        </p>
+                                        <p class="bold-font text-left">
+                                            Date: 2016-04-04T23:59:18
+                                        </p>                                                                                
+                                    </div>
                                 </div>
                             </div>                            
                         </div>
@@ -420,7 +385,7 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
     <style>
-        .well {
+        .well.well-lg {
             background: white;
         }        
     </style>
@@ -547,6 +512,8 @@
                                 console.log(result["Date"]);
                                 console.log("\n");
                             }
+                        
+//                            $("#newsfeed").html();
                        })
                        .fail(function( jqxhr, textStatus, error ) {
                             var err = textStatus + ", " + error;
