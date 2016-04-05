@@ -1,0 +1,30 @@
+glyphicons
+
+glyphicon glyphicon-chevron-right
+glyphicon glyphicon-search
+glyphicon glyphicon-refresh
+
+glyphicon glyphicon-dashboard
+glyphicon glyphicon-link
+glyphicon glyphicon-stats
+
+glyphicon glyphicon-star
+glyphicon glyphicon-star-empty
+glyphicon glyphicon-trash
+
+
+http://chart.finance.yahoo.com/t?s=TSLA&lang=en-US&width=400&height=300
+http://www.bootstraptoggle.com/
+
+
+
+Order of JS and CSS inclusion so that it works properly (even after taking time to load all the libraries (do not change visual stuff aspect after))
+Improved form elements' position
+
+Disconnect from wifi and try everything -> error handling
+
+Change AWS for GAE (faster acc. to prof.)
+
+Responsive design - try on different screen sizes and devices
+
+Add links where appropriate - watch demonstration video
