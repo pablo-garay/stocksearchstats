@@ -100,6 +100,11 @@
         .news-text {
             padding-bottom: 2em;
         }
+        
+        .star-font {
+            font-size: 20px;
+            color: white;
+        }
     </style>
     
     <!-- Bootstrap -->
@@ -184,22 +189,7 @@
     
         <hr>
 
-        <div class="well well-lg">
-            <!--<button type="button" class="btn btn-default" aria-label="Left Align">
-              <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-            </button>-->
-<!--
-            <button type="button" class="btn btn-default" aria-label="Left Align">
-              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-default" aria-label="Left Align">
-              <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-default" aria-label="Left Align">
-              <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
--->
-            </button>
-            
+        <div class="well well-lg">            
             <!-- Carousel
             ================================================== -->
             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">             
@@ -230,13 +220,15 @@
                             
                         </div>
                         <div class="panel-body">
-                            <table class="table table-striped">
-                                <th>Symbol</th>
-                                <th>Company Name</th>
-                                <th>Stock Price</th>
-                                <th>Change (Change Percent)</th>
-                                <th>Market Cap</th>
-                                <th></th>
+                            <table id="favorite-table-data" class="table table-striped">
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Company Name</th>
+                                    <th>Stock Price</th>
+                                    <th>Change (Change Percent)</th>
+                                    <th>Market Cap</th>
+                                    <th></th>                                    
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -319,9 +311,11 @@
                                         <div class="col-md-6">
                                             <div class="col-md-12">
                                                 <p class="text-right">
-                                                    <img src="img/fb-icon.png" class="fb-icon" alt="Facebook Connect button">
-                                                    <button type="button" class="btn btn-default" aria-label="Left Align">
-                                                        <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+                                                    <img src="img/fb-icon.png" class="fb-icon" alt="Facebook Connect button"
+                                                         data-toggle="tooltip" data-placement="bottom" title="Share in Facebook">
+                                                    <button type="button" class="btn btn-default"  id="favorite-button" aria-label="Left Align"
+                                                            data-toggle="tooltip" data-placement="bottom" title="Add to/Remove from Favorites List">
+                                                        <span class="glyphicon glyphicon-star-empty star-font" aria-hidden="true"></span>
                                                     </button>
                                                 </p>                                                  
                                             </div>
@@ -373,6 +367,13 @@
     <!--  load Bootstrap Toggle library -->
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    
+    <!--  load Highcharts scripts library  -->
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>  
+    
+    <!--  load JS code with configuration, options and functions to create Highcharts chart properly  -->
+    <script src="MarkitTimeseriesService.js"></script>
 
     <style>
         .well.well-lg {
@@ -398,7 +399,48 @@
         
         // disable button to show stock details
         disableStockDetailsButton();
-        enableStockDetailsButton();
+         /* remove this later!!!!!!!!!!!! */enableStockDetailsButton();
+        
+        function populateFavoriteList(){
+            /* delete all rows in a table except the first (table header) */
+            $("#favorite-table-data").find("tr:gt(0)").remove();
+                
+            for (var key in localStorage){
+                /*alert(key);*/
+
+                $.ajax({
+                  url: "http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
+                  dataType: "json",
+                  type: 'GET',
+                  data: {
+                    symbol: key
+                  },
+                  success: function( marketData ) {
+                    if (!(marketData["Error"])){ /* successful data retrieval */
+                        /* populate or update table data */ 
+                        $('#favorite-table-data tr:last').after(
+                            '<tr>' +
+                            '<td>' + marketData["Symbol"] + '</td>' +
+                            '<td>' + marketData["Name"]   + '</td>' +
+                            '<td>' + marketData["Last Price"] + '</td>' +
+                            '<td>' + marketData["Change (Change Percent)"] + '</td>' +
+                            '<td>' + marketData["Market Cap"] + '</td>' +
+                            '<td><button type="button" class="btn btn-default" aria-label="Left Align"' + 
+                                  'data-toggle="tooltip" data-placement="bottom" title="Remove from Favorites">' +
+                            '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>' +
+                            '</tr>'
+                        );                            
+
+                    } else {
+                        /* Error */
+                        alert("Error while trying to populate Favorite List table");
+                    }  
+                  }
+                });                   
+            }
+        }
+        
+        populateFavoriteList();
         
         function log( message ) {
           $( "<div>" ).text( message ).prependTo( "#log" );
@@ -440,6 +482,34 @@
           }
         });
         
+        $("#favorite-button").click(function(evt) {
+            
+            // Check browser support
+            if (typeof(Storage) !== "undefined") {
+                // Retrieve
+                var symbol_str = $("#stock-details-table-symbol").html().trim(); /*alert(symbol_str);*/
+                
+                if (/\S/.test(symbol_str)){
+                    if (localStorage.getItem(symbol_str) == null){
+                        /*alert("Symbol currently not in local storage");*/
+                        localStorage.setItem(symbol_str, symbol_str);
+                        /*alert(symbol_str);*/
+                        $( ".star-font" ).css("color", "yellow");
+                        
+                    } else {
+                        /*alert("Symbol IS currently in local storage");*/
+                        localStorage.removeItem(symbol_str);
+                        $( ".star-font" ).css("color", "white");
+                    }
+                }
+                /* repopulate favorite list accordingly */
+                populateFavoriteList();
+                
+            } else {
+                alert("Sorry, your browser does not support Web Storage...");
+            }
+        });        
+
         $("#get-quote-button").click(function(evt) {
 //            $("#inputForm")[0].checkValidity();
             evt.preventDefault();
@@ -481,10 +551,11 @@
                         console.log(ip);                                                
                         $("#newsfeed").html(ip);
                     }); */                        
-                        
+                    
+                    /* News Feeds Tab Content */
                     $.getJSON("http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
-                              {
-                               newsq: marketData["Symbol"]
+                    {
+                        newsq: marketData["Symbol"]
                     }) .done(function( json ) {
                             /*alert(typeof json["d"]["results"]);
                             alert(json["d"]["results"]);*/
@@ -523,6 +594,17 @@
                             var err = textStatus + ", " + error;
                             alert( "Request for News Failed: " + err);
                        });
+                    
+                    /* Historical Charts Tab Content */
+                    $("#historicalcharts").html('<div id="stockValuesChartContainer" style="height: 400px; min-width: 310px"></div>');
+                    /* create chart */
+                    $(function(){
+                        var sym = marketData["Symbol"];
+                        var dur = Math.round(365 * 2.75);
+                        var container = "#stockValuesChartContainer";
+                        new Markit.InteractiveChartApi(sym, dur, container);
+                    });                 
+                    
                     
                 } else {
                     /* Error */
