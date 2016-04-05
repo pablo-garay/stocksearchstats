@@ -96,6 +96,10 @@
             width: 40px;
             width: 34px;
         }
+        
+        .news-text {
+            padding-bottom: 2em;
+        }
     </style>
     
     <!-- Bootstrap -->
@@ -330,20 +334,6 @@
                                 </div>
                                 <div class="tab-pane fade" id="newsfeed">
                                     <p class="text-center">News Feed</p>
-                                    <div class="well">
-                                        <span class="text-left">
-                                            <a href="http://www.watchlistnews.com/microsoft-co-msft-stake-reduced-by-strategy-asset-managers-llc/602122.html">Microsoft Co. (MSFT) Stake Reduced by Strategy Asset Managers LLC</a>
-                                        </span>
-                                        <p class="text-left">
-                                            Strategy Asset Managers LLC reduced its stake in shares of Microsoft Co. (NASDAQ:MSFT) by 2.8% during the fourth quarter, according to its most recent filing with the Securities and Exchange Commission. The firm owned 236,957 shares of the software giant ...
-                                        </p>
-                                        <p class="bold-font text-left">
-                                            Publisher: Watch List News
-                                        </p>
-                                        <p class="bold-font text-left">
-                                            Date: 2016-04-04T23:59:18
-                                        </p>                                                                                
-                                    </div>
                                 </div>
                             </div>                            
                         </div>
@@ -495,25 +485,39 @@
                     $.getJSON("http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
                               {
                                newsq: marketData["Symbol"]
-                    }) .done(function( json ) {                        
-                            var st;
-
+                    }) .done(function( json ) {
                             /*alert(typeof json["d"]["results"]);
                             alert(json["d"]["results"]);*/
                             var results = json["d"]["results"];
                             var result;
+                            $("#newsfeed").html("");
+                        
                             for (var key in results){
                                 /*console.log(JSON.stringify(results[result]));*/
                                 result = results[key];
-                                console.log(result["Url"]);
+                                /*console.log(result["Url"]);
                                 console.log(result["Title"]);
                                 console.log(result["Description"]);
                                 console.log(result["Source"]);
                                 console.log(result["Date"]);
-                                console.log("\n");
+                                console.log("\n");*/
+
+                                $("#newsfeed").append(
+                                    '<div class="well">' +
+                                        '<span class="text-left"><a href="' + result["Url"] + '">' + result["Title"] + '</a></span>' +
+                                        '<p class="text-left news-text">'   + result["Description"] + '</p>' +
+                                        '<p class="bold-font text-left">'   + 'Publisher: ' + result["Source"] + '</p>' +
+                                        '<p class="bold-font text-left">'   + 'Date: '      + result["Date"] + '</p>' +
+                                    '</div>'
+                                );
                             }
+                            
+                            /* the following code makes the SYMBOL word bold whenever it's found in the news text */
+                            var html = $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html();
+                            $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html(
+                                html.replace(marketData["Symbol"], '<span class="bold-font">' + marketData["Symbol"] + '</span>'));
+                            /*$("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").css( "font-weight", "bold" );*/
                         
-//                            $("#newsfeed").html();
                        })
                        .fail(function( jqxhr, textStatus, error ) {
                             var err = textStatus + ", " + error;
