@@ -495,21 +495,21 @@
               data: {
                 symbol: $( "#input" ).val()
               },
-              success: function( data ) {
-                if (!(data["Error"])){ /* successful data retrieval */
+              success: function( marketData ) {
+                if (!(marketData["Error"])){ /* successful data retrieval */
                     $(".feedback-message").html('');
                     /* populate or update table data */
-                    $("#stock-details-table-name").html(data["Name"]);
-                    $("#stock-details-table-symbol").html(data["Symbol"]);
-                    $("#stock-details-table-last-price").html(data["Last Price"]);
-                    $("#stock-details-table-change").html(data["Change (Change Percent)"]);
-                    $("#stock-details-table-timestamp").html(data["Time and Date"]);
-                    $("#stock-details-table-marketcap").html(data["Market Cap"]);
-                    $("#stock-details-table-volume").html(data["Volume"]);
-                    $("#stock-details-table-ytd").html(data["Change YTD (Change Percent YTD)"]);
-                    $("#stock-details-table-high-price").html(data["High"]);
-                    $("#stock-details-table-low-price").html(data["Low"]);
-                    $("#stock-details-table-opening-price").html(data["Open"]);
+                    $("#stock-details-table-name").html(marketData["Name"]);
+                    $("#stock-details-table-symbol").html(marketData["Symbol"]);
+                    $("#stock-details-table-last-price").html(marketData["Last Price"]);
+                    $("#stock-details-table-change").html(marketData["Change (Change Percent)"]);
+                    $("#stock-details-table-timestamp").html(marketData["Time and Date"]);
+                    $("#stock-details-table-marketcap").html(marketData["Market Cap"]);
+                    $("#stock-details-table-volume").html(marketData["Volume"]);
+                    $("#stock-details-table-ytd").html(marketData["Change YTD (Change Percent YTD)"]);
+                    $("#stock-details-table-high-price").html(marketData["High"]);
+                    $("#stock-details-table-low-price").html(marketData["Low"]);
+                    $("#stock-details-table-opening-price").html(marketData["Open"]);
                     
                     $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + $( "#input" ).val() + '&lang=en-US&width=600&height=500');
                     $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
@@ -519,6 +519,39 @@
                     
                     /* switch to Stock details slide automatically */
                     $("#myCarousel").carousel(1);
+                    
+                    /* Get news feed */
+                   /* $.getJSON('//api.ipify.org?format=jsonp&callback=?', function(ipresult) {
+                        var ip = ipresult["ip"];
+                        console.log(ip);                                                
+                        $("#newsfeed").html(ip);
+                    }); */                        
+                        
+                    $.getJSON("http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
+                              {
+                               newsq: marketData["Symbol"]
+                    }) .done(function( json ) {                        
+                            var st;
+
+                            /*alert(typeof json["d"]["results"]);
+                            alert(json["d"]["results"]);*/
+                            var results = json["d"]["results"];
+                            var result;
+                            for (var key in results){
+                                /*console.log(JSON.stringify(results[result]));*/
+                                result = results[key];
+                                console.log(result["Url"]);
+                                console.log(result["Title"]);
+                                console.log(result["Description"]);
+                                console.log(result["Source"]);
+                                console.log(result["Date"]);
+                                console.log("\n");
+                            }
+                       })
+                       .fail(function( jqxhr, textStatus, error ) {
+                            var err = textStatus + ", " + error;
+                            alert( "Request for News Failed: " + err);
+                       });
                     
                 } else {
                     /* Error */
@@ -547,11 +580,11 @@
         $(".fb-icon").click(function(){
             FB.ui({
                 method: 'feed',
-                /*link:  'http://chart.finance.yahoo.com/t?s=' + $("#stock-details-table-symbol").html() + '&lang=en-US&width=900&height=1200',*/
+                link:  'http://dev.markitondemand.com/',
                 picture: 'http://chart.finance.yahoo.com/t?s=' + $("#stock-details-table-symbol").html() + '&lang=en-US&width=900&height=1200',
                 name: 'Current Stock Price of ' + $("#stock-details-table-name").html() + ' is ' + $("#stock-details-table-last-price").html(),
-                caption: 'Stock Information of ' + $("#stock-details-table-name").html() + ' (' + $("#stock-details-table-symbol").html() + ')',
-                description: 'LAST TRADE PRICE: ' + $("#stock-details-table-last-price").html() + ', CHANGE: ' + $("#stock-details-table-change").html()
+                description: 'Stock Information of ' + $("#stock-details-table-name").html() + ' (' + $("#stock-details-table-symbol").html() + ')',
+                caption: 'LAST TRADE PRICE: ' + $("#stock-details-table-last-price").html() + ', CHANGE: ' + $("#stock-details-table-change").html()
             }, function(response){
                 // Debug response (optional)
                 /*console.log(response);*/
