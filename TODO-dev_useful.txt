@@ -39,3 +39,5 @@ Refresh every 5 secs.
 Star yellow, white
 
 Increase, decrease image indicator
+
+Format Date of News
