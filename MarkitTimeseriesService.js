@@ -119,7 +119,7 @@ Markit.InteractiveChartApi.prototype.render = function(data) {
 
         series: [{
             type: 'area',
-            name: this.symbol + ' Stock Value',
+            name: this.symbol,
             data: ohlc,
             dataGrouping: {
                 units: groupingUnits
@@ -173,6 +173,10 @@ Markit.InteractiveChartApi.prototype.render = function(data) {
             selected: 0,
             inputEnabled: false, /* Remove Date Input (From, To dates) */
             //enabled: false
+        },
+
+        tooltip: {
+            pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>${point.y}</b><br/>',
         },        
 
         credits: {
