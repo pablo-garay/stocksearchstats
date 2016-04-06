@@ -105,6 +105,18 @@
             font-size: 20px;
             color: white;
         }
+
+        .well.well-lg {
+            background: white;
+        }
+        
+        .red {
+            color: red;
+        }
+        
+        .green {
+            color: green;
+        }        
     </style>
     
     <!-- Bootstrap -->
@@ -119,7 +131,7 @@
     <![endif]-->      
       
     <!-- Custom styles for this template -->
-    <link href="carousel.css" rel="stylesheet">   
+    <link href="carousel.css" rel="stylesheet">    
     
     <style>
         .carousel div.item{
@@ -375,12 +387,6 @@
     <!--  load JS code with configuration, options and functions to create Highcharts chart properly  -->
     <script src="MarkitTimeseriesService.js"></script>
 
-    <style>
-        .well.well-lg {
-            background: white;
-        }        
-    </style>
-
     <script>
     // A $( document ).ready() block.
     $( document ).ready(function() {
@@ -409,7 +415,7 @@
                 /*alert(key);*/
 
                 $.ajax({
-                  url: "http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
+                  url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
                   dataType: "json",
                   type: 'GET',
                   data: {
@@ -423,7 +429,7 @@
                             '<td>' + marketData["Symbol"] + '</td>' +
                             '<td>' + marketData["Name"]   + '</td>' +
                             '<td>' + marketData["Last Price"] + '</td>' +
-                            '<td>' + marketData["Change (Change Percent)"] + '</td>' +
+                            '<td>' + computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]) + '</td>' +
                             '<td>' + marketData["Market Cap"] + '</td>' +
                             '<td><button type="button" class="btn btn-default" aria-label="Left Align"' + 
                                   'data-toggle="tooltip" data-placement="bottom" title="Remove from Favorites">' +
@@ -450,7 +456,7 @@
         $( "#input" ).autocomplete({
           source: function( request, response ) {
             $.ajax({
-              url: "http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
+              url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
               dataType: "json",
               type: 'GET',
               data: {
@@ -508,13 +514,23 @@
             } else {
                 alert("Sorry, your browser does not support Web Storage...");
             }
-        });        
+        });
+        
+        function computeTableDataHtmlString(indicator, table_data_value){
+            if (indicator > 0){
+                return ('<span class="green">' + table_data_value + '</span>' + '<img src="img/up.png" class="marker-icon" alt="UP marker">');
+            } else if (indicator < 0){
+                return ('<span class="red">'   + table_data_value + '</span>' + '<img src="img/down.png" class="marker-icon" alt="DOWN marker">');
+            } else {
+                return (table_data_value);
+            }            
+        }
 
         $("#get-quote-button").click(function(evt) {
 //            $("#inputForm")[0].checkValidity();
             evt.preventDefault();
             $.ajax({
-              url: "http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
+              url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
               dataType: "json",
               type: 'GET',
               data: {
@@ -527,11 +543,15 @@
                     $("#stock-details-table-name").html(marketData["Name"]);
                     $("#stock-details-table-symbol").html(marketData["Symbol"]);
                     $("#stock-details-table-last-price").html(marketData["Last Price"]);
-                    $("#stock-details-table-change").html(marketData["Change (Change Percent)"]);
+                    
+                    $("#stock-details-table-change").html(computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]));
+
                     $("#stock-details-table-timestamp").html(marketData["Time and Date"]);
                     $("#stock-details-table-marketcap").html(marketData["Market Cap"]);
                     $("#stock-details-table-volume").html(marketData["Volume"]);
-                    $("#stock-details-table-ytd").html(marketData["Change YTD (Change Percent YTD)"]);
+                    
+                    $("#stock-details-table-ytd").html(computeTableDataHtmlString(marketData["Change YTD Indicator"], marketData["Change YTD (Change Percent YTD)"]));
+
                     $("#stock-details-table-high-price").html(marketData["High"]);
                     $("#stock-details-table-low-price").html(marketData["Low"]);
                     $("#stock-details-table-opening-price").html(marketData["Open"]);
@@ -553,7 +573,7 @@
                     }); */                        
                     
                     /* News Feeds Tab Content */
-                    $.getJSON("http://stockstats-env.us-west-2.elasticbeanstalk.com/stockstatsapi/json.php",
+                    $.getJSON("http://stockstats-1256.appspot.com/stockstatsapi/json",
                     {
                         newsq: marketData["Symbol"]
                     }) .done(function( json ) {

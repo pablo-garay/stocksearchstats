@@ -11,6 +11,20 @@
         return strval(number_format(round($number, $decimals), $decimals));
     }
 
+    function get_indicator($number1, $number2, $decimals = 2){
+        $rounded_num1 = (number_format(round($number1, $decimals), $decimals));
+        $rounded_num2 = (number_format(round($number2, $decimals), $decimals));
+        
+        if ($rounded_num1 < 0 || $rounded_num2 < 0){
+            return -1;
+        } else if ($rounded_num1 == 0 && $rounded_num2 == 0){
+            return 0;
+        } else {
+            return 1;
+        }
+        /*return ($rounded_num > 0 ? 1 : ($rounded_num < 0 ? -1 : 0));*/
+    }
+
     if (isset($_GET["symbol"])){
         /* JSON */
         $json = @file_get_contents("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=" . rawurlencode(htmlspecialchars($_GET["symbol"])));
@@ -54,11 +68,13 @@
                     'Last Price' => "$ " .  strval_number_format_round($jsonResultArray["LastPrice"], 2),
                     'Change (Change Percent)' => strval_number_format_round($jsonResultArray["Change"], 2) . 
                                          " ( " . strval_number_format_round($jsonResultArray["ChangePercent"], 2) . "%" . ")",
+                    'Change Indicator' => get_indicator($jsonResultArray["Change"], $jsonResultArray["ChangePercent"], 2),
                     'Time and Date' => $formatted_timestamp,
                     'Market Cap' => $formatted_marketcap,
                     'Volume' => strval($jsonResultArray["Volume"]),
                     'Change YTD (Change Percent YTD)' => strval_number_format_round($jsonResultArray["ChangeYTD"], 2). 
                                                  " ( " . strval_number_format_round($jsonResultArray["ChangePercentYTD"], 2) . "%" . " )",
+                    'Change YTD Indicator' => get_indicator($jsonResultArray["ChangeYTD"], $jsonResultArray["ChangePercentYTD"], 2),
                     'High' => "$ " .  strval_number_format_round($jsonResultArray["High"], 2),
                     'Low' => "$ " .  strval_number_format_round($jsonResultArray["Low"], 2),
                     'Open' => "$ " .  strval_number_format_round($jsonResultArray["Open"], 2)
