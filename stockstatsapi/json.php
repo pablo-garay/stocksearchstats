@@ -144,6 +144,15 @@
         /*$jsonobj = json_decode($response);
         print_r($jsonobj);*/
         
+    } else if(isset($_GET["parameters"])){
+        $json = @file_get_contents( 'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters=' . rawurlencode($_GET["parameters"]) );
+        
+        if ($json === FALSE){ /* conditional for error handling */
+            return generate_error_response("Error while trying to access resource to generate response");
+        } else {
+            echo $json;
+        }
+        
     } else {
         return generate_error_response("No parameters have been provided");
     }

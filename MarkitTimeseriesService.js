@@ -27,8 +27,8 @@ Markit.InteractiveChartApi.prototype.PlotChart = function(){
             $(this.container).text("Loading chart...");
         },
         data: params,
-        url: "http://dev.markitondemand.com/Api/v2/InteractiveChart/jsonp",
-        dataType: "jsonp",
+        url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
+        dataType: "json",
         context: this,
         success: function(json){
             //Catch errors

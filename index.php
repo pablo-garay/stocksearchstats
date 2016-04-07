@@ -392,66 +392,10 @@
     $( document ).ready(function() {
         console.log( "ready!" );
         
-        function enableStockDetailsButton() {
-            $('#stock-details-button').prop('disabled', false);
-            $('#stock-details-button').removeAttr('disabled');
-        }
-        
-        // disable button to show stock details
-        function disableStockDetailsButton() {
-            $('#stock-details-button').prop('disabled', true);
-            $('#stock-details-button').attr('disabled', 'disabled');
-        }
-        
         // disable button to show stock details
         disableStockDetailsButton();
          /* remove this later!!!!!!!!!!!! */enableStockDetailsButton();
-        
-        function populateFavoriteList(){
-            /* delete all rows in a table except the first (table header) */
-            $("#favorite-table-data").find("tr:gt(0)").remove();
-                
-            for (var key in localStorage){
-                /*alert(key);*/
-
-                $.ajax({
-                  url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
-                  dataType: "json",
-                  type: 'GET',
-                  data: {
-                    symbol: key
-                  },
-                  success: function( marketData ) {
-                    if (!(marketData["Error"])){ /* successful data retrieval */
-                        /* populate or update table data */ 
-                        $('#favorite-table-data tr:last').after(
-                            '<tr>' +
-                            '<td>' + marketData["Symbol"] + '</td>' +
-                            '<td>' + marketData["Name"]   + '</td>' +
-                            '<td>' + marketData["Last Price"] + '</td>' +
-                            '<td>' + computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]) + '</td>' +
-                            '<td>' + marketData["Market Cap"] + '</td>' +
-                            '<td><button type="button" class="btn btn-default" aria-label="Left Align"' + 
-                                  'data-toggle="tooltip" data-placement="bottom" title="Remove from Favorites">' +
-                            '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>' +
-                            '</tr>'
-                        );                            
-
-                    } else {
-                        /* Error */
-                        alert("Error while trying to populate Favorite List table");
-                    }  
-                  }
-                });                   
-            }
-        }
-        
         populateFavoriteList();
-        
-        function log( message ) {
-          $( "<div>" ).text( message ).prependTo( "#log" );
-          $( "#log" ).scrollTop( 0 );
-        }
 
         $( "#input" ).autocomplete({
           source: function( request, response ) {
@@ -489,7 +433,6 @@
         });
         
         $("#favorite-button").click(function(evt) {
-            
             // Check browser support
             if (typeof(Storage) !== "undefined") {
                 // Retrieve
@@ -515,129 +458,11 @@
                 alert("Sorry, your browser does not support Web Storage...");
             }
         });
-        
-        function computeTableDataHtmlString(indicator, table_data_value){
-            if (indicator > 0){
-                return ('<span class="green">' + table_data_value + '</span>' + '<img src="img/up.png" class="marker-icon" alt="UP marker">');
-            } else if (indicator < 0){
-                return ('<span class="red">'   + table_data_value + '</span>' + '<img src="img/down.png" class="marker-icon" alt="DOWN marker">');
-            } else {
-                return (table_data_value);
-            }            
-        }
 
         $("#get-quote-button").click(function(evt) {
 //            $("#inputForm")[0].checkValidity();
             evt.preventDefault();
-            $.ajax({
-              url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
-              dataType: "json",
-              type: 'GET',
-              data: {
-                symbol: $( "#input" ).val()
-              },
-              success: function( marketData ) {
-                if (!(marketData["Error"])){ /* successful data retrieval */
-                    $(".feedback-message").html('');
-                    /* populate or update table data */
-                    $("#stock-details-table-name").html(marketData["Name"]);
-                    $("#stock-details-table-symbol").html(marketData["Symbol"]);
-                    $("#stock-details-table-last-price").html(marketData["Last Price"]);
-                    
-                    $("#stock-details-table-change").html(computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]));
-
-                    $("#stock-details-table-timestamp").html(marketData["Time and Date"]);
-                    $("#stock-details-table-marketcap").html(marketData["Market Cap"]);
-                    $("#stock-details-table-volume").html(marketData["Volume"]);
-                    
-                    $("#stock-details-table-ytd").html(computeTableDataHtmlString(marketData["Change YTD Indicator"], marketData["Change YTD (Change Percent YTD)"]));
-
-                    $("#stock-details-table-high-price").html(marketData["High"]);
-                    $("#stock-details-table-low-price").html(marketData["Low"]);
-                    $("#stock-details-table-opening-price").html(marketData["Open"]);
-                    
-                    $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + $( "#input" ).val() + '&lang=en-US&width=600&height=500');
-                    $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
-                    
-                    /* enable show stock details button */
-                    enableStockDetailsButton();
-                    
-                    /* switch to Stock details slide automatically */
-                    $("#myCarousel").carousel(1);
-                    
-                    /* Get news feed */
-                   /* $.getJSON('//api.ipify.org?format=jsonp&callback=?', function(ipresult) {
-                        var ip = ipresult["ip"];
-                        console.log(ip);                                                
-                        $("#newsfeed").html(ip);
-                    }); */                        
-                    
-                    /* News Feeds Tab Content */
-                    $.getJSON("http://stockstats-1256.appspot.com/stockstatsapi/json",
-                    {
-                        newsq: marketData["Symbol"]
-                    }) .done(function( json ) {
-                            /*alert(typeof json["d"]["results"]);
-                            alert(json["d"]["results"]);*/
-                            var results = json["d"]["results"];
-                            var result;
-                            $("#newsfeed").html("");
-                        
-                            for (var key in results){
-                                /*console.log(JSON.stringify(results[result]));*/
-                                result = results[key];
-                                /*console.log(result["Url"]);
-                                console.log(result["Title"]);
-                                console.log(result["Description"]);
-                                console.log(result["Source"]);
-                                console.log(result["Date"]);
-                                console.log("\n");*/
-
-                                $("#newsfeed").append(
-                                    '<div class="well">' +
-                                        '<span class="text-left"><a href="' + result["Url"] + '">' + result["Title"] + '</a></span>' +
-                                        '<p class="text-left news-text">'   + result["Description"] + '</p>' +
-                                        '<p class="bold-font text-left">'   + 'Publisher: ' + result["Source"] + '</p>' +
-                                        '<p class="bold-font text-left">'   + 'Date: '      + result["Date"] + '</p>' +
-                                    '</div>'
-                                );
-                            }
-                            
-                            /* the following code makes the SYMBOL word bold whenever it's found in the news text */
-                            var html = $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html();
-                            $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html(
-                                html.replace(marketData["Symbol"], '<span class="bold-font">' + marketData["Symbol"] + '</span>'));
-                            /*$("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").css( "font-weight", "bold" );*/
-                        
-                       })
-                       .fail(function( jqxhr, textStatus, error ) {
-                            var err = textStatus + ", " + error;
-                            alert( "Request for News Failed: " + err);
-                       });
-                    
-                    /* Historical Charts Tab Content */
-                    $("#historicalcharts").html('<div id="stockValuesChartContainer" style="height: 400px; min-width: 310px"></div>');
-                    /* create chart */
-                    $(function(){
-                        var sym = marketData["Symbol"];
-                        var dur = Math.round(365 * 2.75);
-                        var container = "#stockValuesChartContainer";
-                        new Markit.InteractiveChartApi(sym, dur, container);
-                    });                 
-                    
-                    
-                } else {
-                    /* Error */
-                    $(".feedback-message").html(
-                        '<p class="red-letter text-left">Select a valid entry</p>'
-                    );
-                    /*alert("Error");*/
-                    disableStockDetailsButton();
-                    /* switch back to first slide */
-                    $("#myCarousel").carousel(0);
-                }  
-              }
-            });
+            showCompanyStockDetails($( "#input" ).val());
         });        
         
         $("#clear-button").click(function(evt) {
@@ -677,6 +502,185 @@
         /* Init tooltips. For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself. */
         $('[data-toggle="tooltip"]').tooltip();
     });
+        
+    function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }        
+        
+    function populateFavoriteList(){
+        /* delete all rows in a table except the first (table header) */
+        $("#favorite-table-data").find("tr:gt(0)").remove();
+
+        for (var key in localStorage){
+            /*alert(key);*/
+
+            $.ajax({
+              url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
+              dataType: "json",
+              type: 'GET',
+              data: {
+                symbol: key
+              },
+              success: function( marketData ) {
+                if (!(marketData["Error"])){ /* successful data retrieval */
+                    /* populate or update table data */ 
+                    $('#favorite-table-data tr:last').after(
+                        '<tr id="' + 'row' + marketData["Symbol"] + '">' +
+                        '<td>' + '<a href="javascript:undefined" onclick="showCompanyStockDetails(\'' + key + '\');">' + marketData["Symbol"] + '</a>' + '</td>' +
+                        '<td>' + marketData["Name"]   + '</td>' +
+                        '<td>' + marketData["Last Price"] + '</td>' +
+                        '<td>' + computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]) + '</td>' +
+                        '<td>' + marketData["Market Cap"] + '</td>' +
+                        '<td><button type="button" class="btn btn-default" aria-label="Left Align"' +
+                              ' onclick="removeFavorite(\'' + marketData["Symbol"] + '\')" ' +
+                              'data-toggle="tooltip" data-placement="bottom" title="Remove from Favorites">' +
+                        '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>' +
+                        '</tr>'
+                    );                            
+
+                } else {
+                    /* Error */
+                    alert("Error while trying to populate Favorite List table");
+                }  
+              }
+            });                   
+        }
+    }        
+        
+    function computeTableDataHtmlString(indicator, table_data_value){
+        if (indicator > 0){
+            return ('<span class="green">' + table_data_value + '</span>' + '<img src="img/up.png" class="marker-icon" alt="UP marker">');
+        } else if (indicator < 0){
+            return ('<span class="red">'   + table_data_value + '</span>' + '<img src="img/down.png" class="marker-icon" alt="DOWN marker">');
+        } else {
+            return (table_data_value);
+        }            
+    }
+        
+    function enableStockDetailsButton() {
+        $('#stock-details-button').prop('disabled', false);
+        $('#stock-details-button').removeAttr('disabled');
+    }
+
+    // disable button to show stock details
+    function disableStockDetailsButton() {
+        $('#stock-details-button').prop('disabled', true);
+        $('#stock-details-button').attr('disabled', 'disabled');
+    }        
+        
+    function showCompanyStockDetails(companySymbol) {
+        $.ajax({
+          url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
+          dataType: "json",
+          type: 'GET',
+          data: {
+            symbol: companySymbol
+          },
+          success: function( marketData ) {
+            if (!(marketData["Error"])){ /* successful data retrieval */
+                $(".feedback-message").html('');
+                /* populate or update table data */
+                $("#stock-details-table-name").html(marketData["Name"]);
+                $("#stock-details-table-symbol").html(marketData["Symbol"]);
+                $("#stock-details-table-last-price").html(marketData["Last Price"]);                    
+                $("#stock-details-table-change").html(computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]));
+                $("#stock-details-table-timestamp").html(marketData["Time and Date"]);
+                $("#stock-details-table-marketcap").html(marketData["Market Cap"]);
+                $("#stock-details-table-volume").html(marketData["Volume"]);                    
+                $("#stock-details-table-ytd").html(computeTableDataHtmlString(marketData["Change YTD Indicator"], marketData["Change YTD (Change Percent YTD)"]));
+                $("#stock-details-table-high-price").html(marketData["High"]);
+                $("#stock-details-table-low-price").html(marketData["Low"]);
+                $("#stock-details-table-opening-price").html(marketData["Open"]);                    
+                $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + companySymbol + '&lang=en-US&width=600&height=500');
+                $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
+
+                /* enable show stock details button */
+                enableStockDetailsButton();
+
+                /* switch to Stock details slide automatically */
+                $("#myCarousel").carousel(1);
+
+                /* Get news feed */
+               /* $.getJSON('//api.ipify.org?format=jsonp&callback=?', function(ipresult) {
+                    var ip = ipresult["ip"];
+                    console.log(ip);                                                
+                    $("#newsfeed").html(ip);
+                }); */                        
+
+                /* News Feeds Tab Content */
+                $.getJSON("http://stockstats-1256.appspot.com/stockstatsapi/json",
+                {
+                    newsq: marketData["Symbol"]
+                }) .done(function( json ) {
+                        /*alert(typeof json["d"]["results"]);
+                        alert(json["d"]["results"]);*/
+                        var results = json["d"]["results"];
+                        var result;
+                        $("#newsfeed").html("");
+
+                        for (var key in results){
+                            /*console.log(JSON.stringify(results[result]));*/
+                            result = results[key];
+                            /*console.log(result["Url"]);
+                            console.log(result["Title"]);
+                            console.log(result["Description"]);
+                            console.log(result["Source"]);
+                            console.log(result["Date"]);
+                            console.log("\n");*/
+
+                            $("#newsfeed").append(
+                                '<div class="well">' +
+                                    '<span class="text-left"><a href="' + result["Url"] + '">' + result["Title"] + '</a></span>' +
+                                    '<p class="text-left news-text">'   + result["Description"] + '</p>' +
+                                    '<p class="bold-font text-left">'   + 'Publisher: ' + result["Source"] + '</p>' +
+                                    '<p class="bold-font text-left">'   + 'Date: '      + result["Date"] + '</p>' +
+                                '</div>'
+                            );
+                        }
+
+                        /* the following code makes the SYMBOL word bold whenever it's found in the news text */
+                        var html = $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html();
+                        $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html(
+                            html.replace(marketData["Symbol"], '<span class="bold-font">' + marketData["Symbol"] + '</span>'));
+                        /*$("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").css( "font-weight", "bold" );*/
+
+                   })
+                   .fail(function( jqxhr, textStatus, error ) {
+                        var err = textStatus + ", " + error;
+                        alert( "Request for News Failed: " + err);
+                   });
+
+                /* Historical Charts Tab Content */
+                $("#historicalcharts").html('<div id="stockValuesChartContainer" style="height: 400px; min-width: 310px"></div>');
+                /* create chart */
+                $(function(){
+                    var sym = marketData["Symbol"];
+                    var dur = Math.round(365 * 2.75);
+                    var container = "#stockValuesChartContainer";
+                    new Markit.InteractiveChartApi(sym, dur, container);
+                });                 
+
+
+            } else {
+                /* Error */
+                $(".feedback-message").html(
+                    '<p class="red-letter text-left">Select a valid entry</p>'
+                );
+                /*alert("Error");*/
+                disableStockDetailsButton();
+                /* switch back to first slide */
+                $("#myCarousel").carousel(0);
+            }  
+          }
+        });
+    }        
+        
+    function removeFavorite(symbol){
+        localStorage.removeItem(symbol);
+        var row_id = '#row' + symbol;
+        $(row_id).remove();
+    }
     
     </script>
     <noscript>
