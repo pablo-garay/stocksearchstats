@@ -173,7 +173,7 @@
     	<div class="well well-lg">
 			<h4 class="text-center bold-font">Stock Market Search</h4>
         
-            <form class="form-horizontal">
+            <form class="form-horizontal" id="search-form">
                 <div class="form-group">    
                     <label for="input" class="col-sm-3 control-label">
                         Enter the stock name or symbol:<span class="red-letter">*</span> 
@@ -469,8 +469,7 @@
             }
         });
 
-        $("#get-quote-button").click(function(evt) {
-//            $("#inputForm")[0].checkValidity();
+        $("#search-form").submit(function(evt) {
             evt.preventDefault();
             showCompanyStockDetails($( "#input" ).val());
         });        
