@@ -93,8 +93,8 @@
         }
         
         .fb-icon {
-            width: 40px;
-            width: 34px;
+            height: 38px;
+            width: 38px;
         }
         
         .news-text {
@@ -103,7 +103,15 @@
         
         .star-font {
             font-size: 20px;
+            text-shadow: -1px 0 #818081, 0 1px #818081, 1px 0 #818081, 0 -1px #818081;
+        }
+        
+        .white-star {
             color: white;
+        }
+        
+        .yellow-star {
+            color: #FEFF40;
         }
 
         .well.well-lg {
@@ -218,7 +226,7 @@
                                     Automatic Refresh:
                                     <input type="checkbox" checked data-toggle="toggle">
                                     <!-- left button -->
-                                    <button type="button" class="btn btn-default" aria-label="Left Align"
+                                    <button type="button" class="btn btn-default" id="refresh-favorite-list-button" aria-label="Left Align"
                                             data-toggle="tooltip" data-placement="bottom" title="Refresh">
                                       <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                     </button>
@@ -327,7 +335,7 @@
                                                          data-toggle="tooltip" data-placement="bottom" title="Share in Facebook">
                                                     <button type="button" class="btn btn-default"  id="favorite-button" aria-label="Left Align"
                                                             data-toggle="tooltip" data-placement="bottom" title="Add to/Remove from Favorites List">
-                                                        <span class="glyphicon glyphicon-star-empty star-font" aria-hidden="true"></span>
+                                                        <span class="glyphicon glyphicon-star star-font white-star" aria-hidden="true"></span>
                                                     </button>
                                                 </p>                                                  
                                             </div>
@@ -443,16 +451,18 @@
                         /*alert("Symbol currently not in local storage");*/
                         localStorage.setItem(symbol_str, symbol_str);
                         /*alert(symbol_str);*/
-                        $( ".star-font" ).css("color", "yellow");
+                        $( ".star-font" ).addClass("yellow-star").removeClass("white-star");
+                        /* add company to favorite table list accordingly */
+                        addCompanyToFavoriteTable(symbol_str);                        
                         
                     } else {
                         /*alert("Symbol IS currently in local storage");*/
                         localStorage.removeItem(symbol_str);
-                        $( ".star-font" ).css("color", "white");
+                        $( ".star-font" ).addClass("white-star").removeClass("yellow-star");
+                        /* remove company from favorite table list accordingly */
+                        removeFavorite(symbol_str);                         
                     }
                 }
-                /* repopulate favorite list accordingly */
-                populateFavoriteList();
                 
             } else {
                 alert("Sorry, your browser does not support Web Storage...");
@@ -474,6 +484,11 @@
             disableStockDetailsButton();
             $("#myCarousel").carousel(0);
         });
+        
+        $("#refresh-favorite-list-button").click(function(evt) {
+            evt.preventDefault();
+            
+        });
 
         $(".fb-icon").click(function(){
             FB.ui({
@@ -482,7 +497,7 @@
                 picture: 'http://chart.finance.yahoo.com/t?s=' + $("#stock-details-table-symbol").html() + '&lang=en-US&width=900&height=1200',
                 name: 'Current Stock Price of ' + $("#stock-details-table-name").html() + ' is ' + $("#stock-details-table-last-price").html(),
                 description: 'Stock Information of ' + $("#stock-details-table-name").html() + ' (' + $("#stock-details-table-symbol").html() + ')',
-                caption: 'LAST TRADE PRICE: ' + $("#stock-details-table-last-price").html() + ', CHANGE: ' + $("#stock-details-table-change").html()
+                caption: 'LAST TRADE PRICE: ' + $("#stock-details-table-last-price").html() + ', CHANGE: ' + $("#stock-details-table-change span").html()
             }, function(response){
                 // Debug response (optional)
                 /*console.log(response);*/
@@ -506,45 +521,49 @@
     function log( message ) {
       $( "<div>" ).text( message ).prependTo( "#log" );
       $( "#log" ).scrollTop( 0 );
-    }        
+    }
         
-    function populateFavoriteList(){
-        /* delete all rows in a table except the first (table header) */
-        $("#favorite-table-data").find("tr:gt(0)").remove();
-
-        for (var key in localStorage){
-            /*alert(key);*/
-
-            $.ajax({
-              url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
-              dataType: "json",
-              type: 'GET',
-              data: {
-                symbol: key
-              },
-              success: function( marketData ) {
-                if (!(marketData["Error"])){ /* successful data retrieval */
-                    /* populate or update table data */ 
-                    $('#favorite-table-data tr:last').after(
-                        '<tr id="' + 'row' + marketData["Symbol"] + '">' +
-                        '<td>' + '<a href="javascript:undefined" onclick="showCompanyStockDetails(\'' + key + '\');">' + marketData["Symbol"] + '</a>' + '</td>' +
+    function addCompanyToFavoriteTable(companySymbol){
+        $.ajax({
+          url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
+          dataType: "json",
+          type: 'GET',
+          data: {
+            symbol: companySymbol
+          },
+          success: function( marketData ) {
+            if (!(marketData["Error"])){ /* successful data retrieval */
+                /* populate or update table data */ 
+                $('#favorite-table-data tr:last').after(
+                    '<tr id="' + 'row' + marketData["Symbol"] + '">' +
+                        '<td>' + '<a href="javascript:undefined" onclick="showCompanyStockDetails(\'' + marketData["Symbol"] + '\');">' + marketData["Symbol"] + 
+                                 '</a>' + '</td>' +
                         '<td>' + marketData["Name"]   + '</td>' +
-                        '<td>' + marketData["Last Price"] + '</td>' +
-                        '<td>' + computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]) + '</td>' +
+                        '<td class="price-table-data">' + marketData["Last Price"] + '</td>' +
+                        '<td class="change-table-data">' + computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]) + '</td>' +
                         '<td>' + marketData["Market Cap"] + '</td>' +
                         '<td><button type="button" class="btn btn-default" aria-label="Left Align"' +
                               ' onclick="removeFavorite(\'' + marketData["Symbol"] + '\')" ' +
                               'data-toggle="tooltip" data-placement="bottom" title="Remove from Favorites">' +
                         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>' +
-                        '</tr>'
-                    );                            
+                    '</tr>'
+                );                            
 
-                } else {
-                    /* Error */
-                    alert("Error while trying to populate Favorite List table");
-                }  
-              }
-            });                   
+            } else {
+                /* Error */
+                alert("Error while trying to populate Favorite List table");
+            }  
+          }
+        });         
+    }
+        
+    function populateFavoriteList(){
+        /* delete all rows in a table except the first (table header) */
+        $("#favorite-table-data").find("tr:gt(0)").remove();
+
+        for (var companySymbol in localStorage){
+            /*alert(companySymbol);*/
+            addCompanyToFavoriteTable(companySymbol);
         }
     }        
         
@@ -594,12 +613,6 @@
                 $("#stock-details-table-opening-price").html(marketData["Open"]);                    
                 $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + companySymbol + '&lang=en-US&width=600&height=500');
                 $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
-
-                /* enable show stock details button */
-                enableStockDetailsButton();
-
-                /* switch to Stock details slide automatically */
-                $("#myCarousel").carousel(1);
 
                 /* Get news feed */
                /* $.getJSON('//api.ipify.org?format=jsonp&callback=?', function(ipresult) {
@@ -659,7 +672,20 @@
                     var dur = Math.round(365 * 2.75);
                     var container = "#stockValuesChartContainer";
                     new Markit.InteractiveChartApi(sym, dur, container);
-                });                 
+                });
+                
+                /* update button's star color */
+                if (localStorage.getItem(marketData["Symbol"]) == null){
+                    $( ".star-font" ).addClass("white-star").removeClass("yellow-star");                    
+                } else {
+                    $( ".star-font" ).addClass("yellow-star").removeClass("white-star");
+                }
+                
+                /* enable show stock details button */
+                enableStockDetailsButton();                
+
+                /* switch to Stock details slide automatically */
+                $("#myCarousel").carousel(1);                
 
 
             } else {

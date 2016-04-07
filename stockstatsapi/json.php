@@ -67,13 +67,13 @@
                     'Symbol' => $jsonResultArray["Symbol"],
                     'Last Price' => "$ " .  strval_number_format_round($jsonResultArray["LastPrice"], 2),
                     'Change (Change Percent)' => strval_number_format_round($jsonResultArray["Change"], 2) . 
-                                         " ( " . strval_number_format_round($jsonResultArray["ChangePercent"], 2) . "%" . ")",
+                                         " (" . strval_number_format_round($jsonResultArray["ChangePercent"], 2) . "%" . ")",
                     'Change Indicator' => get_indicator($jsonResultArray["Change"], $jsonResultArray["ChangePercent"], 2),
                     'Time and Date' => $formatted_timestamp,
                     'Market Cap' => $formatted_marketcap,
                     'Volume' => strval($jsonResultArray["Volume"]),
                     'Change YTD (Change Percent YTD)' => strval_number_format_round($jsonResultArray["ChangeYTD"], 2). 
-                                                 " ( " . strval_number_format_round($jsonResultArray["ChangePercentYTD"], 2) . "%" . " )",
+                                                 " (" . strval_number_format_round($jsonResultArray["ChangePercentYTD"], 2) . "%" . ")",
                     'Change YTD Indicator' => get_indicator($jsonResultArray["ChangeYTD"], $jsonResultArray["ChangePercentYTD"], 2),
                     'High' => "$ " .  strval_number_format_round($jsonResultArray["High"], 2),
                     'Low' => "$ " .  strval_number_format_round($jsonResultArray["Low"], 2),
