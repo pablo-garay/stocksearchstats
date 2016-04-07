@@ -212,7 +212,7 @@
         <div class="well well-lg">            
             <!-- Carousel
             ================================================== -->
-            <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">             
+            <div id="resultsAreaCarousel" class="carousel slide" data-ride="carousel" data-interval="false">             
               <div class="carousel-inner" role="listbox">
                 <div class="item active">
                     <div class="panel panel-default">
@@ -224,13 +224,13 @@
                                 </div>
                                 <div class="col-md-4 text-right">
                                     Automatic Refresh:
-                                    <input type="checkbox" checked data-toggle="toggle">
+                                    <input id="toggle-event" type="checkbox" data-toggle="toggle">
                                     <!-- left button -->
                                     <button type="button" class="btn btn-default" id="refresh-favorite-list-button" aria-label="Left Align"
                                             data-toggle="tooltip" data-placement="bottom" title="Refresh">
                                       <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                     </button>
-                                    <a class="btn btn-default" id="stock-details-button" href="#myCarousel" role="button" data-slide="next" 
+                                    <a class="btn btn-default" id="stock-details-button" href="#resultsAreaCarousel" role="button" data-slide="next" 
                                        disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Display Stock Information">
                                         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                                         <span class="sr-only">Next</span>
@@ -259,7 +259,7 @@
                             
                         <div class="row">
                             <div class="col-md-1">
-                                <a class="btn btn-default" href="#myCarousel" role="button" data-slide="prev"
+                                <a class="btn btn-default" href="#resultsAreaCarousel" role="button" data-slide="prev"
                                     data-toggle="tooltip" data-placement="bottom" title="Display Favorite List">
                                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
@@ -440,6 +440,15 @@
           }
         });
         
+        $("#stock-details-button").click(function(evt) {
+            evt.preventDefault();
+
+            if ($('#stock-details-button').prop('enabled')){ /* if button is enabled */
+                /* switch to Stock details slide automatically */
+                $("#resultsAreaCarousel").carousel(1);
+            }
+        });
+        
         $("#favorite-button").click(function(evt) {
             // Check browser support
             if (typeof(Storage) !== "undefined") {
@@ -481,12 +490,46 @@
             
             /* disable button to show stock details and switch back to first slide */
             disableStockDetailsButton();
-            $("#myCarousel").carousel(0);
+            $("#resultsAreaCarousel").carousel(0);
         });
+        
+        function refreshCompanyStats(companySymbol){
+            $.ajax({
+              url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
+              dataType: "json",
+              type: 'GET',
+              data: {
+                symbol: companySymbol
+              },
+              success: function( marketData ) {
+                if (!(marketData["Error"])){ /* successful data retrieval */                    
+                    
+                    table_row = $("#row" + companySymbol);
+                    price_td = table_row.find(".price-table-data");
+                    change_td = table_row.find(".change-table-data");
+                    
+                    price_td.html(marketData["Last Price"]);
+                    change_td.html(computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]));
+
+                } 
+//                else {
+//                    /* Error */
+//                    alert("Error while trying to refresh Favorite List table");
+//                }  
+              }
+            });         
+        }
+        
+        function refreshFavoriteListData(){
+            for (var companySymbol in localStorage){
+                /*alert(companySymbol);*/
+                refreshCompanyStats(companySymbol);
+            }            
+        }
         
         $("#refresh-favorite-list-button").click(function(evt) {
             evt.preventDefault();
-            
+            refreshFavoriteListData();
         });
 
         $(".fb-icon").click(function(){
@@ -511,6 +554,15 @@
               method: 'share',
               href: 'http://chart.finance.yahoo.com/t?s=AAPL&lang=en-US&width=600&height=500'
             }, function(response){});*/
+        });
+        
+        $('#toggle-event').change(function() {
+            /*alert('Toggle: ' + $(this).prop('checked'));*/
+            if ($(this).prop('checked')){ /* button is On, then refresh every 5 secs */
+                refreshTimerVar = setInterval(refreshFavoriteListData, 5000);
+            } else { /* button is Off */
+                clearInterval(refreshTimerVar);
+            }
         });
         
         /* Init tooltips. For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself. */
@@ -550,7 +602,7 @@
 
             } else {
                 /* Error */
-                alert("Error while trying to populate Favorite List table");
+                alert("Error while trying to load company to Favorite List");
             }  
           }
         });         
@@ -684,8 +736,7 @@
                 enableStockDetailsButton();                
 
                 /* switch to Stock details slide automatically */
-                $("#myCarousel").carousel(1);                
-
+                $("#resultsAreaCarousel").carousel(1);
 
             } else {
                 /* Error */
@@ -695,7 +746,7 @@
                 /*alert("Error");*/
                 disableStockDetailsButton();
                 /* switch back to first slide */
-                $("#myCarousel").carousel(0);
+                $("#resultsAreaCarousel").carousel(0);
             }  
           }
         });
