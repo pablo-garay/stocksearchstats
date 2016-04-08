@@ -1,5 +1,6 @@
 <?php
     header("Access-Control-Allow-Origin: *");
+
     function generate_error_response($error_message){
         $php_response = ["Error" => "Message: " . $error_message];
         $json_response = json_encode($php_response);
@@ -138,11 +139,29 @@
         ));
         $request = $WebSearchURL . urlencode( '\''  . rawurlencode(htmlspecialchars($_GET["newsq"])) . '\'');
         /*echo($request . "<br /><br />");*/
-        $response = file_get_contents($request, 0, $context);
-        echo $response;
+        $file_contents = file_get_contents($request, 0, $context);
+        $results_array = json_decode($file_contents, true)["d"]["results"];
+     
 
-        /*$jsonobj = json_decode($response);
-        print_r($jsonobj);*/
+        foreach ($results_array as &$result){
+        	// print_r($result["Date"]);
+
+	        $matches = [];
+	        preg_match('/^(\d{4}-\d{2}-\d{2})T(\S*)Z$/', $result["Date"], $matches);
+	        // print_r($matches);
+	        date_default_timezone_set('America/Los_Angeles');
+	        $date = DateTime::createFromFormat('Y-m-d H:i:s e', 
+	                          $matches[1] . " " . $matches[2]. " " . "UTC");
+	        // print_r($date);
+	        $tz = new DateTimeZone('America/Los_Angeles');
+	        $formatted_timestamp = $date->setTimezone($tz)->format('d M Y H:i:s');
+	        // echo " ---------- "; print_r($formatted_timestamp); echo "<br />";
+	        $result["Date"] = $formatted_timestamp;
+	        // print_r($result);
+        }
+
+        /* send json response */
+        echo json_encode($results_array);
         
     } else if(isset($_GET["parameters"])){
         $json = @file_get_contents( 'http://dev.markitondemand.com/Api/v2/InteractiveChart/json?parameters=' . rawurlencode($_GET["parameters"]) );

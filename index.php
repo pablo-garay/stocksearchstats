@@ -688,7 +688,7 @@
                 }) .done(function( json ) {
                         /*alert(typeof json["d"]["results"]);
                         alert(json["d"]["results"]);*/
-                        var results = json["d"]["results"];
+                        var results = json;
                         var result;
                         $("#newsfeed").html("");
 
