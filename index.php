@@ -202,7 +202,8 @@
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="bold-font text-left">Powered By: <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo"></div>
+                        <div class="bold-font text-left">Powered By: <a href="http://dev.markitondemand.com/MODApis/" target="_blank">
+                             <img src="img/mod-logo.png" class="markit-on-demand-logo" alt="MarkitOnDemand Logo"></a></div>
                     </div>
                 </div>            
             </form>
