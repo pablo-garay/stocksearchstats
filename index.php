@@ -403,7 +403,7 @@
         
         // disable button to show stock details
         disableStockDetailsButton();
-         /* remove this later!!!!!!!!!!!! */enableStockDetailsButton();
+         /* remove this later!!!!!!!!!!!! */ //enableStockDetailsButton();
         populateFavoriteList();
 
         $( "#input" ).autocomplete({
@@ -494,40 +494,6 @@
             $("#resultsAreaCarousel").carousel(0);
         });
         
-        function refreshCompanyStats(companySymbol){
-            $.ajax({
-              url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
-              dataType: "json",
-              type: 'GET',
-              data: {
-                symbol: companySymbol
-              },
-              success: function( marketData ) {
-                if (!(marketData["Error"])){ /* successful data retrieval */                    
-                    
-                    table_row = $("#row" + companySymbol);
-                    price_td = table_row.find(".price-table-data");
-                    change_td = table_row.find(".change-table-data");
-                    
-                    price_td.html(marketData["Last Price"]);
-                    change_td.html(computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]));
-
-                } 
-//                else {
-//                    /* Error */
-//                    alert("Error while trying to refresh Favorite List table");
-//                }  
-              }
-            });         
-        }
-        
-        function refreshFavoriteListData(){
-            for (var companySymbol in localStorage){
-                /*alert(companySymbol);*/
-                refreshCompanyStats(companySymbol);
-            }            
-        }
-        
         $("#refresh-favorite-list-button").click(function(evt) {
             evt.preventDefault();
             refreshFavoriteListData();
@@ -569,6 +535,42 @@
         /* Init tooltips. For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself. */
         $('[data-toggle="tooltip"]').tooltip();
     });
+        
+    function updateFavoriteColumn(companySymbol, marketData){
+        table_row = $("#row" + companySymbol);
+        var price_td = table_row.find(".price-table-data");
+        var change_td = table_row.find(".change-table-data");
+
+        price_td.html(marketData["Last Price"]);
+        change_td.html(computeTableDataHtmlString(marketData["Change Indicator"], marketData["Change (Change Percent)"]));
+    }
+
+    function refreshCompanyStats(companySymbol){
+        $.ajax({
+          url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
+          dataType: "json",
+          type: 'GET',
+          data: {
+            symbol: companySymbol
+          },
+          success: function( marketData ) {
+            if (!(marketData["Error"])){ /* successful data retrieval */                    
+                updateFavoriteColumn(companySymbol, marketData);
+            } 
+//                else {
+//                    /* Error */
+//                    alert("Error while trying to refresh Favorite List table");
+//                }  
+          }
+        });         
+    }
+
+    function refreshFavoriteListData(){
+        for (var companySymbol in localStorage){
+            /*alert(companySymbol);*/
+            refreshCompanyStats(companySymbol);
+        }            
+    }
         
     function log( message ) {
       $( "<div>" ).text( message ).prependTo( "#log" );
@@ -665,6 +667,11 @@
                 $("#stock-details-table-opening-price").html(marketData["Open"]);                    
                 $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + companySymbol + '&lang=en-US&width=600&height=500');
                 $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
+                
+                /* Update comapany's row in Favorite List if present */
+                if (localStorage[marketData["Symbol"]]){ /* will update only if Symbol is in Favorite table - row selected by jquery selector */
+                    updateFavoriteColumn(marketData["Symbol"], marketData);
+                }
 
                 /* Get news feed */
                /* $.getJSON('//api.ipify.org?format=jsonp&callback=?', function(ipresult) {
@@ -734,7 +741,7 @@
                 }
                 
                 /* enable show stock details button */
-                enableStockDetailsButton();                
+                enableStockDetailsButton();
 
                 /* switch to Stock details slide automatically */
                 $("#resultsAreaCarousel").carousel(1);
