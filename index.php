@@ -80,8 +80,9 @@
         }
 
         .marker-icon {
-            height: 12px;
-            width: 12px;
+            margin-left: 10px;
+            height: 32px;
+            width: 32px;
         }
         
         .bold-font,  .panel-font-title {
@@ -740,9 +741,18 @@
 
             } else {
                 /* Error */
+                var err_message;
+                
+                if (marketData["Error"] === "Message: There is no stock information available"){
+                    err_message = "There is no stock information available";
+                } else {
+                    err_message = "Select a valid entry";
+                }
+                
                 $(".feedback-message").html(
-                    '<p class="red-letter text-left">Select a valid entry</p>'
-                );
+                    '<p class="red-letter text-left">' + err_message + '</p>'
+                );                
+                
                 /*alert("Error");*/
                 disableStockDetailsButton();
                 /* switch back to first slide */
