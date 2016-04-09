@@ -576,7 +576,7 @@
       $( "#log" ).scrollTop( 0 );
     }
         
-    function addCompanyToFavoriteTable(companySymbol){
+    function addCompanyToFavoriteTable(companySymbol, mode){
         $.ajax({
           url: "http://stockstats-1256.appspot.com/stockstatsapi/json",
           dataType: "json",
@@ -586,8 +586,8 @@
           },
           success: function( marketData ) {
             if (!(marketData["Error"])){ /* successful data retrieval */
-                /* populate or update table data */ 
-                $('#favorite-table-data tr:last').after(
+                /* populate or update table data */
+                var htmlToAdd = 
                     '<tr id="' + 'row' + marketData["Symbol"] + '">' +
                         '<td>' + '<a href="javascript:undefined" onclick="showCompanyStockDetails(\'' + marketData["Symbol"] + '\');">' + marketData["Symbol"] + 
                                  '</a>' + '</td>' +
@@ -599,8 +599,14 @@
                               ' onclick="removeFavorite(\'' + marketData["Symbol"] + '\')" ' +
                               'data-toggle="tooltip" data-placement="bottom" title="Remove from Favorites">' +
                         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>' +
-                    '</tr>'
-                );                            
+                    '</tr>';
+                
+                if (mode == "update"){
+                    $("#row" + marketData["Symbol"]).replaceWith(htmlToAdd);
+                } else {
+                    /* mode == "add" */
+                    $('#favorite-table-data tr:last').after(htmlToAdd);
+                }
 
             } else {
                 /* Error */
@@ -611,14 +617,30 @@
     }
         
     function populateFavoriteList(){
-        /* delete all rows in a table except the first (table header) */
-        $("#favorite-table-data").find("tr:gt(0)").remove();
-
         var symbolsArray = localStorageArray();
         
+        /* delete all rows in a table except the first (table header) */
+        $("#favorite-table-data").find("tr:gt(0)").remove();         
+        
+        /* first add only the symbol to the Favorite table to put element in its proper order. Then use AJAX call to complete all the row details */
         for (var i = 0; i < symbolsArray.length; i++){
-            /*alert(companySymbol);*/
-            addCompanyToFavoriteTable(symbolsArray[i]);
+            $('#favorite-table-data tr:last').after(
+                '<tr id="' + 'row' + symbolsArray[i] + '">' +
+                    '<td>' + '<a href="javascript:undefined" onclick="showCompanyStockDetails(\'' + symbolsArray[i] + '\');">' + symbolsArray[i] + 
+                             '</a>' + '</td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td><button type="button" class="btn btn-default" aria-label="Left Align"' +
+                          ' onclick="removeFavorite(\'' + symbolsArray[i] + '\')" ' +
+                          'data-toggle="tooltip" data-placement="bottom" title="Remove from Favorites">' +
+                    '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>' +
+                '</tr>'
+            );            
+        }
+        for (var i = 0; i < symbolsArray.length; i++){
+            addCompanyToFavoriteTable(symbolsArray[i], "update");
         }
     }        
         
@@ -775,7 +797,7 @@
         /*alert(symbol_str);*/
         $( ".star-font" ).addClass("yellow-star").removeClass("white-star");
         /* add company to favorite table list accordingly */
-        addCompanyToFavoriteTable(symbol_str);         
+        addCompanyToFavoriteTable(symbol_str, "add");         
     }
         
     function removeFavorite(symbol){
