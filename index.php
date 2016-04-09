@@ -226,7 +226,9 @@
                                 </div>
                                 <div class="col-md-4 text-right">
                                     Automatic Refresh:
-                                    <input id="toggle-event" type="checkbox" data-toggle="toggle">
+                                    <span data-toggle="tooltip" data-placement="right" title="Auto-refresh in 5 seconds">
+                                        <input id="toggle-event" type="checkbox" data-toggle="toggle">
+                                    </span>
                                     <!-- left button -->
                                     <button type="button" class="btn btn-default" id="refresh-favorite-list-button" aria-label="Left Align"
                                             data-toggle="tooltip" data-placement="bottom" title="Refresh">
@@ -262,7 +264,7 @@
                         <div class="row">
                             <div class="col-md-1">
                                 <a class="btn btn-default" href="#resultsAreaCarousel" role="button" data-slide="prev"
-                                    data-toggle="tooltip" data-placement="bottom" title="Display Favorite List">
+                                    data-toggle="tooltip" data-placement="right" title="Display Favorite List">
                                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
                                 </a>                            
@@ -457,19 +459,13 @@
                 // Retrieve
                 var symbol_str = $("#stock-details-table-symbol").html().trim(); /*alert(symbol_str);*/
                 
-                if (/\S/.test(symbol_str)){
-                    if (localStorage.getItem(symbol_str) == null){
+                if (/\S/.test(symbol_str)){ /* non-empty string */
+                    if (localStorageGetItem(symbol_str) == null){
                         /*alert("Symbol currently not in local storage");*/
-                        localStorage.setItem(symbol_str, symbol_str);
-                        /*alert(symbol_str);*/
-                        $( ".star-font" ).addClass("yellow-star").removeClass("white-star");
-                        /* add company to favorite table list accordingly */
-                        addCompanyToFavoriteTable(symbol_str);                        
+                        addFavorite(symbol_str);                        
                         
                     } else {
                         /*alert("Symbol IS currently in local storage");*/
-                        localStorage.removeItem(symbol_str);
-                        $( ".star-font" ).addClass("white-star").removeClass("yellow-star");
                         /* remove company from favorite table list accordingly */
                         removeFavorite(symbol_str);                         
                     }
@@ -567,10 +563,12 @@
     }
 
     function refreshFavoriteListData(){
-        for (var companySymbol in localStorage){
+        var symbolsArray = localStorageArray();
+        
+        for (var i = 0; i < symbolsArray.length; i++){
             /*alert(companySymbol);*/
-            refreshCompanyStats(companySymbol);
-        }            
+            refreshCompanyStats(symbolsArray[i]);
+        }
     }
         
     function log( message ) {
@@ -616,9 +614,11 @@
         /* delete all rows in a table except the first (table header) */
         $("#favorite-table-data").find("tr:gt(0)").remove();
 
-        for (var companySymbol in localStorage){
+        var symbolsArray = localStorageArray();
+        
+        for (var i = 0; i < symbolsArray.length; i++){
             /*alert(companySymbol);*/
-            addCompanyToFavoriteTable(companySymbol);
+            addCompanyToFavoriteTable(symbolsArray[i]);
         }
     }        
         
@@ -670,7 +670,7 @@
                 $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
                 
                 /* Update comapany's row in Favorite List if present */
-                if (localStorage[marketData["Symbol"]]){ /* will update only if Symbol is in Favorite table - row selected by jquery selector */
+                if (localStorageGetItem([marketData["Symbol"]])){ /* will update only if Symbol is in Favorite table - row selected by jquery selector */
                     updateFavoriteColumn(marketData["Symbol"], marketData);
                 }
 
@@ -735,7 +735,7 @@
                 });
                 
                 /* update button's star color */
-                if (localStorage.getItem(marketData["Symbol"]) == null){
+                if (localStorageGetItem(marketData["Symbol"]) == null){
                     $( ".star-font" ).addClass("white-star").removeClass("yellow-star");                    
                 } else {
                     $( ".star-font" ).addClass("yellow-star").removeClass("white-star");
@@ -768,12 +768,79 @@
             }  
           }
         });
-    }        
+    }
+        
+    function addFavorite(symbol_str){
+        localStorageSetItem(symbol_str);
+        /*alert(symbol_str);*/
+        $( ".star-font" ).addClass("yellow-star").removeClass("white-star");
+        /* add company to favorite table list accordingly */
+        addCompanyToFavoriteTable(symbol_str);         
+    }
         
     function removeFavorite(symbol){
-        localStorage.removeItem(symbol);
+        localStorageRemoveItem(symbol);
         var row_id = '#row' + symbol;
         $(row_id).remove();
+        
+        var symbol_table = $("#stock-details-table-symbol").html().trim(); /*alert(symbol_str);*/
+        
+        if (symbol_table == symbol){
+            $( ".star-font" ).addClass("white-star").removeClass("yellow-star");
+        }
+    }        
+        
+    function localStorageGetItem(symbol){
+        var stringifiedLocalStoredArray = localStorage.getItem("symbols");
+        
+        if (stringifiedLocalStoredArray){
+            var json_array = JSON.parse(stringifiedLocalStoredArray);
+            
+            if (json_array.indexOf(symbol) > -1){
+                return symbol;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+        
+    function localStorageSetItem(symbol){
+        var stringifiedLocalStoredArray = localStorage.getItem("symbols");
+        
+        if (stringifiedLocalStoredArray){
+            var symbols_array = JSON.parse(stringifiedLocalStoredArray);
+            symbols_array.push(symbol);
+            localStorage.setItem("symbols", JSON.stringify(symbols_array));
+            
+        } else {
+            var symbols_array = [symbol];
+            localStorage.setItem("symbols", JSON.stringify(symbols_array));
+        }
+    }
+        
+    function localStorageRemoveItem(symbol){
+        var stringifiedLocalStoredArray = localStorage.getItem("symbols");
+        
+        if (stringifiedLocalStoredArray){
+            var symbols_array = JSON.parse(stringifiedLocalStoredArray);
+            
+            for (var i = symbols_array.length - 1; i >= 0; i--) {
+                if (symbols_array[i] === symbol) {
+                   symbols_array.splice(i, 1);
+                }
+            }
+            localStorage.setItem("symbols", JSON.stringify(symbols_array));
+        }
+    }
+        
+    function localStorageArray(){
+        var stringifiedLocalStoredArray = localStorage.getItem("symbols");
+        
+        if (stringifiedLocalStoredArray){
+            return JSON.parse(stringifiedLocalStoredArray);
+        }
+        return null;
     }
     
     </script>
