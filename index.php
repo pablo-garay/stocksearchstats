@@ -13,13 +13,16 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     
     <style>
+        * {
+            font-family: 'Roboto', sans-serif, Arial;
+        }
         body {
             background: url('img/backg.jpg') no-repeat center center fixed; 
             background-color: transparent;
             background-size: cover;
             text-align: left;
             margin: 0;
-            font-family: Arial;
+            font-family: 'Roboto', sans-serif, Arial;
             font-size: 14px;
         }
         div.layout 
@@ -146,6 +149,11 @@
             font-size: 15px;
             font-weight: bold;
         }
+        
+        #stockValuesChartContainer {
+            height: 480px;
+            width : 1079px;
+        }
     </style>
     
     <!-- Bootstrap -->
@@ -237,7 +245,7 @@
 
                             <div class="row">
                                 <div class="col-md-8">
-                                    <p class="text-left panel-font-title">Favorite List</p>                                    
+                                    <p class="text-left panel-font-title ">Favorite List</p>                                    
                                 </div>
                                 <div class="col-md-4 text-right">
                                     Automatic Refresh:
