@@ -9,6 +9,9 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Stock Market Statistics Search and Information Retrieval</title>
     
+    <!--  Font  -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    
     <style>
         body {
             background: url('img/backg.jpg') no-repeat center center fixed; 
@@ -89,6 +92,10 @@
             font-weight: bold;
         }
         
+        .special-family-font {
+            font-family: 'Roboto', sans-serif;
+        }
+        
         .red-letter {
             color: #ED001E;
         }
@@ -125,7 +132,20 @@
         
         .green {
             color: green;
-        }        
+        }
+        
+        .carousel div.item{
+          background-color: transparent;
+        }
+        
+        .carousel-inner {
+            height: auto !important;
+        }
+        
+        form label{
+            font-size: 15px;
+            font-weight: bold;
+        }
     </style>
     
     <!-- Bootstrap -->
@@ -140,13 +160,8 @@
     <![endif]-->      
       
     <!-- Custom styles for this template -->
-    <link href="carousel.css" rel="stylesheet">    
-    
-    <style>
-        .carousel div.item{
-          background-color: white;
-        }  
-    </style>
+    <link href="carousel.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -172,11 +187,11 @@
     
     <div class="layout">
     	<div class="well well-lg">
-			<h4 class="text-center bold-font">Stock Market Search</h4>
+			<h4 class="text-center bold-font special-family-font">Stock Market Search</h4>
         
             <form class="form-horizontal" id="search-form">
                 <div class="form-group">    
-                    <label for="input" class="col-sm-3 control-label">
+                    <label for="input" class="col-sm-3 control-label special-family-font">
                         Enter the stock name or symbol:<span class="red-letter">*</span> 
                     </label>
                     <div class="col-sm-6">
@@ -209,17 +224,17 @@
             </form>
         </div>
     
-        <hr>
-
-        <div class="well well-lg">            
-            <!-- Carousel
-            ================================================== -->
-            <div id="resultsAreaCarousel" class="carousel slide" data-ride="carousel" data-interval="false">             
-              <div class="carousel-inner" role="listbox">
-                <div class="item active">
+        <hr>    
+        
+        <!-- Carousel
+        ================================================== -->
+        <div id="resultsAreaCarousel" class="carousel slide" data-ride="carousel" data-interval="false">             
+          <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <div class="well well-lg" id="favorite-list-well">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            
+
                             <div class="row">
                                 <div class="col-md-8">
                                     <p class="text-left panel-font-title">Favorite List</p>                                    
@@ -241,7 +256,7 @@
                                     </a>                                    
                                 </div>                          
                             </div>
-                            
+
                         </div>
                         <div class="panel-body">
                             <table id="favorite-table-data" class="table table-striped">
@@ -255,12 +270,14 @@
                                 </tr>
                             </table>
                         </div>
-                    </div>
+                    </div>                
                 </div>
-                <div class="item">
+            </div>
+            <div class="item">
+                <div class="well well-lg" id="stock-details-well">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            
+
                         <div class="row">
                             <div class="col-md-1">
                                 <a class="btn btn-default" href="#resultsAreaCarousel" role="button" data-slide="prev"
@@ -273,7 +290,7 @@
                                 <p class="text-center panel-font-title">Stock Details</p>
                             </div>
                         </div>
-                            
+
                         </div>
                         <div class="panel-body">
                             <div class="page-header">
@@ -291,7 +308,7 @@
                             </div>
                             <div id="myTabContent1" class="tab-content">
                                 <div class="tab-pane fade in active" id="currentstocks">                                  
-                                    
+
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="col-md-3">
@@ -348,7 +365,15 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="historicalcharts">
-                                    <p class="text-center">Historical charts</p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-12">
+                                                <div id="stockValuesChartContainer">
+                                                    <p class="text-center">Historical charts</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="newsfeed">
                                     <p class="text-center">News Feed</p>
@@ -356,12 +381,13 @@
                             </div>                            
                         </div>
                     </div>                
-                </div>
-              </div>
-              
+                </div>                                
             </div>
-            <!-- /.carousel -->
-        </div>    
+          </div>
+
+        </div>
+        <!-- /.carousel -->
+        
 	</div>    
 
     <!-- ============= JS scripts ============= -->
@@ -408,6 +434,8 @@
         disableStockDetailsButton();
          /* remove this later!!!!!!!!!!!! */ //enableStockDetailsButton();
         populateFavoriteList();
+        /* resize Carousel height according to fit content loaded */
+        resizeCarousel();
 
         $( "#input" ).autocomplete({
           source: function( request, response ) {
@@ -449,7 +477,7 @@
 
             if ($('#stock-details-button').prop('enabled')){ /* if button is enabled */
                 /* switch to Stock details slide automatically */
-                $("#resultsAreaCarousel").carousel(1);
+                switchCarouselSlide(1);
             }
         });
         
@@ -488,7 +516,7 @@
             
             /* disable button to show stock details and switch back to first slide */
             disableStockDetailsButton();
-            $("#resultsAreaCarousel").carousel(0);
+            switchCarouselSlide(0);
         });
         
         $("#refresh-favorite-list-button").click(function(evt) {
@@ -529,9 +557,22 @@
             }
         });
         
+        $("#resultsAreaCarousel").on('slid.bs.carousel', function () {
+            resizeCarousel();
+        });
+        
+        $('.nav-pills a').on('shown.bs.tab', function(){
+            resizeCarousel();
+        });
+        
         /* Init tooltips. For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself. */
         $('[data-toggle="tooltip"]').tooltip();
     });
+        
+    function resizeCarousel(){
+        $(".carousel div.item").height($(".carousel div.item.active .well.well-lg").height() + 50);
+        $("#resultsAreaCarousel").height($(".carousel div.item.active .well.well-lg").height() + 50);
+    }
         
     function updateFavoriteColumn(companySymbol, marketData){
         table_row = $("#row" + companySymbol);
@@ -688,7 +729,7 @@
                 $("#stock-details-table-high-price").html(marketData["High"]);
                 $("#stock-details-table-low-price").html(marketData["Low"]);
                 $("#stock-details-table-opening-price").html(marketData["Open"]);                    
-                $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + companySymbol + '&lang=en-US&width=600&height=500');
+                $("#yahoo-finance-stats-chart").attr("src", 'http://chart.finance.yahoo.com/t?s=' + companySymbol + '&lang=en-US&width=530&height=330');
                 $("#yahoo-finance-stats-chart").attr("alt", 'Yahoo Finance chart');
                 
                 /* Update comapany's row in Favorite List if present */
@@ -713,32 +754,39 @@
                         var results = json;
                         var result;
                         $("#newsfeed").html("");
+                        
+                        /* check if we have received results in our search for news */
+                        if (!jQuery.isEmptyObject(results)){ /* nonempty object -> we have news! */
+                            for (var key in results){
+                                /*console.log(JSON.stringify(results[result]));*/
+                                result = results[key];
+                                /*console.log(result["Url"]);
+                                console.log(result["Title"]);
+                                console.log(result["Description"]);
+                                console.log(result["Source"]);
+                                console.log(result["Date"]);
+                                console.log("\n");*/
 
-                        for (var key in results){
-                            /*console.log(JSON.stringify(results[result]));*/
-                            result = results[key];
-                            /*console.log(result["Url"]);
-                            console.log(result["Title"]);
-                            console.log(result["Description"]);
-                            console.log(result["Source"]);
-                            console.log(result["Date"]);
-                            console.log("\n");*/
+                                $("#newsfeed").append(
+                                    '<div class="well">' +
+                                        '<span class="text-left"><a href="' + result["Url"] + '" target="_blank">' + result["Title"] + '</a></span>' +
+                                        '<p class="text-left news-text">'   + result["Description"] + '</p>' +
+                                        '<p class="bold-font text-left">'   + 'Publisher: ' + result["Source"] + '</p>' +
+                                        '<p class="bold-font text-left">'   + 'Date: '      + result["Date"] + '</p>' +
+                                    '</div>'
+                                );
+                            }
 
-                            $("#newsfeed").append(
-                                '<div class="well">' +
-                                    '<span class="text-left"><a href="' + result["Url"] + '">' + result["Title"] + '</a></span>' +
-                                    '<p class="text-left news-text">'   + result["Description"] + '</p>' +
-                                    '<p class="bold-font text-left">'   + 'Publisher: ' + result["Source"] + '</p>' +
-                                    '<p class="bold-font text-left">'   + 'Date: '      + result["Date"] + '</p>' +
-                                '</div>'
-                            );
+                            /* the following code makes the SYMBOL word bold whenever it's found in the news text */
+                            var html = $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html();
+                            $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html(
+                                html.replace(marketData["Symbol"], '<span class="bold-font">' + marketData["Symbol"] + '</span>'));
+                            /*$("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").css( "font-weight", "bold" );*/                            
+                        
+                        } else { /* no news found */
+                            $("#newsfeed").html('<p class="text-center">No news have been found for this company</p>');
                         }
 
-                        /* the following code makes the SYMBOL word bold whenever it's found in the news text */
-                        var html = $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html();
-                        $("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").html(
-                            html.replace(marketData["Symbol"], '<span class="bold-font">' + marketData["Symbol"] + '</span>'));
-                        /*$("#newsfeed .news-text:contains(" + marketData["Symbol"] + ")").css( "font-weight", "bold" );*/
 
                    })
                    .fail(function( jqxhr, textStatus, error ) {
@@ -747,7 +795,6 @@
                    });
 
                 /* Historical Charts Tab Content */
-                $("#historicalcharts").html('<div id="stockValuesChartContainer" style="height: 400px; min-width: 310px"></div>');
                 /* create chart */
                 $(function(){
                     var sym = marketData["Symbol"];
@@ -767,7 +814,7 @@
                 enableStockDetailsButton();
 
                 /* switch to Stock details slide automatically */
-                $("#resultsAreaCarousel").carousel(1);
+                switchCarouselSlide(1);
 
             } else {
                 /* Error */
@@ -786,10 +833,14 @@
                 /*alert("Error");*/
                 disableStockDetailsButton();
                 /* switch back to first slide */
-                $("#resultsAreaCarousel").carousel(0);
+                switchCarouselSlide(0);
             }  
           }
         });
+    }
+        
+    function switchCarouselSlide(slideNumber){
+        $("#resultsAreaCarousel").carousel(slideNumber);
     }
         
     function addFavorite(symbol_str){
@@ -862,7 +913,7 @@
         if (stringifiedLocalStoredArray){
             return JSON.parse(stringifiedLocalStoredArray);
         }
-        return null;
+        return [];
     }
     
     </script>
