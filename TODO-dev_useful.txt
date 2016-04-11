@@ -21,37 +21,30 @@ Increase, decrease image indicator
 Interactive chart
 Order of JS and CSS inclusion so that it works properly (even after taking time to load all the libraries (do not change visual stuff aspect after))
 
+Change AWS for GAE (faster acc. to prof.)
+Replace AWS for GAE - performs MUCH MUCH FASTER!!!!!!!!!!
 
-Change AWS for GAE (faster acc. to prof.) -> MUCH MUCH MUCH FASTERR!!!!!!!!!!!!!!!!!!
-
-
-
-
-
-TODO
-
-
-Improved form elements' position
-
+Star yellow, white - update it whenever Stock Details tab is updated
+Local storage and Favorites 
+User Input validation
+Format Date of News - Display in the local time
+Refresh every 5 secs. - #refresh-favorite-list-button
+tooltip for on/off toggle
 Disconnect from wifi and try everything -> error handling
 
-Responsive design - try on different screen sizes and devices
+Order in localStorage
+You need to maintain the sequence of favorite list as entered initially. Any new entry is added at the bottom of the list, and the sequence should never change. This has been answered multiple times.
 
 Add links where appropriate - watch demonstration video
 
+Can we use google fonts to import the font ?
+As the font being used doesn't seem to be default available
 
-Local storage and Favorites
+Fix Well(not) -> Carousel(yes) resizing
 
-Fix Well resizing
+Improve form elements' position
 
-Refresh every 5 secs.
-
-
-User Input validation
-
-
-Star yellow, white
-Format Date of News
+Responsive design - try on different screen sizes and devices
 
 
 

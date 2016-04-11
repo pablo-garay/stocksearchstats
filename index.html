@@ -25,6 +25,7 @@
             margin: 0;
             font-family: 'Roboto', sans-serif, Arial;
             font-size: 14px;
+            padding-top: 1em;
         }
         /*div.layout 
         {
@@ -249,10 +250,10 @@
                         <div class="panel-heading">
 
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-xs-3 col-md-8">
                                     <p class="text-left panel-font-title ">Favorite List</p>                                    
                                 </div>
-                                <div class="col-md-4 text-right">
+                                <div class="col-xs-9 col-md-4 text-right">
                                     Automatic Refresh:
                                     <span data-toggle="tooltip" data-placement="right" title="Auto-refresh in 5 seconds">
                                         <input id="toggle-event" type="checkbox" data-toggle="toggle">
@@ -272,16 +273,18 @@
 
                         </div>
                         <div class="panel-body">
-                            <table id="favorite-table-data" class="table table-striped">
-                                <tr>
-                                    <th>Symbol</th>
-                                    <th>Company Name</th>
-                                    <th>Stock Price</th>
-                                    <th>Change (Change Percent)</th>
-                                    <th>Market Cap</th>
-                                    <th></th>                                    
-                                </tr>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="favorite-table-data" class="table table-striped">
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Company Name</th>
+                                        <th>Stock Price</th>
+                                        <th>Change (Change Percent)</th>
+                                        <th>Market Cap</th>
+                                        <th></th>                                    
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>                
                 </div>
